@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Versa_News</string>
+    <string name="youtubeapi">AIzaSyCb3oxi30gJfpVpClvuvU_YlF7xVKXHOS8</string>
+    <string name="search">Search</string>
+    <string name="failed">Failed to initialize Youtube Player</string>
+
 </resources>
