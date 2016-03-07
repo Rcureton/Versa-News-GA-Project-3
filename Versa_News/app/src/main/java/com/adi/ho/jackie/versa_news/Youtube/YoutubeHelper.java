@@ -48,8 +48,12 @@ public class YoutubeHelper {
         try {
             PlaylistListResponse playlistListResponse= youTube.playlists().list("snippet").setChannelId("UC0iwHRFpv2_fpojZgQhElEQ").execute();
             List<Playlist> playlistList= playlistListResponse.getItems();
-             playlist= playlistList.get(0);
-            playlist.getSnippet().getDescription();
+                playlist= playlistList.get(0);
+                playlist.getSnippet().getChannelTitle();
+                playlist.getSnippet().getThumbnails();
+                playlist.getSnippet().getTitle();
+                playlist.getSnippet().getDescription();
+
 
         } catch (IOException e) {
             e.printStackTrace();
