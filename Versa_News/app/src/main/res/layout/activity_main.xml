@@ -19,4 +19,16 @@
         android:text="videos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <com.facebook.share.widget.LikeView
+        android:id="@+id/likeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button"/>
+
+    <com.facebook.share.widget.ShareButton
+        android:id="@+id/sharebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/likeView"/>
 </RelativeLayout>
