@@ -36,12 +36,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.listview);
-//        mArrayList = new ArrayList<ViceItemsClass>();
         mAdapter = new ArrayAdapter<ViceItemsClass>(MainActivity.this, android.R.layout.simple_list_item_1, new ArrayList<ViceItemsClass>());
         mListView.setAdapter(mAdapter);
 
-        // TODO: Move to strings resources folder
-        String getMostPopularURL = "http://vice.com/api/getmostpopular/";
+
+        // TODO: Set category to something, based on how we will be accessing that info.
+        String category = "";
+        String articleID = "";
+
+        String getMostPopularURL = String.valueOf(R.string.get_most_popular);
+        String getViceTodayURL = String.valueOf(R.string.get_vice_today);
+        String getLatestURL = String.valueOf(R.string.get_latest);
+        String getLatestCategoryURL = String.valueOf(R.string.get_latest_category)+category;
+        String getArticleURL = String.valueOf(R.string.get_article)+articleID;
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -86,10 +93,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ViceSearchResultsClass result) {
             super.onPostExecute(result);
             ViceDataClass item = result.getData();
-            mAdapter.clear();
-            mAdapter.addAll(item.getItems());
-            Log.d("ASYNCTASK", "list size: "+item.getItems().size());
-
+            // TODO: Add the pulled data to the View.
         }
 
         public String getInputData(InputStream stream) throws IOException {

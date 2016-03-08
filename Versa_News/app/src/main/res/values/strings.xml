@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Versa_News</string>
+    <string name="get_vice_today">http://vice.com/api/getvicetoday/</string>
+    <string name="get_most_popular">http://vice.com/api/getmostpopular/</string>
+    <string name="get_latest">http://vice.com/api/getlatest/</string>
+    <string name="get_latest_category">http://vice.com/api/getlatest/category/</string>
+    <string name="get_article">http://vice.com/api/article/</string>
 </resources>
