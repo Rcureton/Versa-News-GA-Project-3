@@ -19,6 +19,7 @@ import com.google.api.services.youtube.model.PlaylistListResponse;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,12 +27,13 @@ import java.util.List;
  */
 public class YoutubeHelper {
     YouTube youTube;
+    private ArrayList<Playlist> mPlayListArray;
 
     public YoutubeHelper(Context context){
 
         List<String> scopes= Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
-
+        mPlayListArray = new ArrayList<>();
 //            Credential credential= Auth.authorize(scopes, "localizations");
 //            youTube= new YouTube.Builder(Auth.HTTP_TRANSPORT,Auth.JSON_FACTORY,credential).setApplicationName(context.getString(R.string.app_name)).build();
             youTube= new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
@@ -43,29 +45,28 @@ public class YoutubeHelper {
 
 
     }
-    public Playlist getPlaylist(){
+    public ArrayList<Playlist> getPlaylist(){
         Playlist playlist= null;
+
         try {
             PlaylistListResponse playlistListResponse= youTube.playlists().list("snippet").setChannelId("UC0iwHRFpv2_fpojZgQhElEQ").execute();
             List<Playlist> playlistList= playlistListResponse.getItems();
-                playlist= playlistList.get(0);
-                playlist.getSnippet().getChannelTitle();
-                playlist.getSnippet().getThumbnails();
-                playlist.getSnippet().getTitle();
-                playlist.getSnippet().getDescription();
+            for (Playlist playlist1: playlistList){
+                mPlayListArray.add(playlist1);
+            }
 
 
         } catch (IOException e) {
             e.printStackTrace();
-        }return playlist;
+        }return mPlayListArray;
 
     }
 
-    public class GetPlaylistTask extends AsyncTask<Void,Void,Playlist>{
-
-        @Override
-        protected Playlist doInBackground(Void... params) {
-           return getPlaylist();
-        }
-    }
+//    public class GetPlaylistTask extends AsyncTask<Void,Void,Playlist>{
+//
+//        @Override
+//        protected Playlist doInBackground(Void... params) {
+//           return getPlaylist();
+//        }
+//    }
 }
