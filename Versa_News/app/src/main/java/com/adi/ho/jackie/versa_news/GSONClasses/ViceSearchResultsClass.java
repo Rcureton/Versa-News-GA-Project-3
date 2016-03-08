@@ -6,15 +6,26 @@ import java.util.ArrayList;
  * Created by Rob on 3/7/16.
  */
 public class ViceSearchResultsClass {
+//
+//    private ArrayList<ViceDataClass> data;
+//
+//    public void setData(ArrayList<ViceDataClass> data){
+//        this.data = data;
+//    }
+//
+//    public ArrayList<ViceDataClass> getData(){
+//        return data;
+//    }
 
-    private ArrayList<ViceDataClass> items;
 
-    public void setItems(ArrayList<ViceDataClass> items){
-        this.items = items;
+    private ViceDataClass data;
+
+    public void setData(ViceDataClass data){
+        this.data = data;
     }
 
-    public ArrayList<ViceDataClass> getItems(){
-        return items;
+    public ViceDataClass getData(){
+        return data;
     }
 
 }
