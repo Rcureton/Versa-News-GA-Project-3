@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+<ScrollView
     tools:context="com.adi.ho.jackie.versa_news.ArticleActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="false"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true">
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
 
 
@@ -23,19 +30,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AUTHOR"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="false"
         android:layout_below="@+id/imageView"
-        android:layout_alignParentTop="false"
-        android:layout_centerHorizontal="true" />
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:paddingLeft="5dp"
+        android:paddingTop="3dp" />
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DATE"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="false"
-        android:layout_below="@+id/authorTextView"
-        android:layout_centerHorizontal="true" />
+        android:textColor="#999999"
+        android:textSize="15sp"
+        android:layout_alignBottom="@+id/authorTextView"
+        android:layout_toRightOf="@+id/authorTextView"
+        android:layout_toEndOf="@+id/authorTextView"
+        android:paddingLeft="12dp" />
+
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TITLE"
+        android:textSize="40dp"
+        android:layout_above="@+id/authorTextView"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="315dp"
+        android:layout_height="match_parent"
+        android:text="Afosdhfo uhs iuhsd iguh iduhisudhgi uhsdi uhsiuhiusgiudh iushg isdug isug hisdu ghisug hisdguh isdu hidsgu hi guhidg uhsgdi uhdsiugs                         aofiseogdkjvnbksdhxodx;fdouhvoxjvubsrugdjfvksdjbviub ibis ubi ubsiud iwuebfiwuehfiesufidsuhiuhsdiufhisudhfiuhwieufhwieufiweufiwefbiub iube iu biub iu bweiub fiwuf df houehf wuhieudsiub fidu iuhwi euhfuwhefiuewh"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="189dp"
+        android:textSize="18sp"
+        android:textColor="#000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="CATEGORY"
+        android:id="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingTop="5dp"
+        android:paddingRight="3dp"
+        android:textSize="15sp"
+        android:textColor="#ffffff" />
+
 </RelativeLayout>
 </ScrollView>
+
+</RelativeLayout>
