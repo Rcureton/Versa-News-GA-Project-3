@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.adi.ho.jackie.versa_news.Fragments.TechFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tech_recycler_list"
+        android:paddingTop="8dp"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"></android.support.v7.widget.RecyclerView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="hihihi"
+        android:textSize="40sp"/>
+
+</LinearLayout>
