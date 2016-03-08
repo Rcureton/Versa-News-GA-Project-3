@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    ArrayList<ViceItemsClass> mArrayList;
     ArrayAdapter<ViceItemsClass> mAdapter;
     ListView mListView;
 
