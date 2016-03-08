@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<ViceItemsClass> mAdapter;
     ListView mListView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,50 +38,49 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new ArrayAdapter<ViceItemsClass>(MainActivity.this, android.R.layout.simple_list_item_1, new ArrayList<ViceItemsClass>());
         mListView.setAdapter(mAdapter);
 
-
-        // TODO: Set category to something, based on how we will be accessing that info.
-        String category = "";
-        String articleID = "";
-
-        String getMostPopularURL = String.valueOf(R.string.get_most_popular);
-        String getViceTodayURL = String.valueOf(R.string.get_vice_today);
-        String getLatestURL = String.valueOf(R.string.get_latest);
-        String getLatestCategoryURL = String.valueOf(R.string.get_latest_category)+category;
-        String getArticleURL = String.valueOf(R.string.get_article)+articleID;
+        // Vice API URLs that data can be received through
+        String getMostPopularURL = getResources().getString(R.string.get_most_popular);
+        String getViceTodayURL = getResources().getString(R.string.get_vice_today);
+        String getLatestURL = getResources().getString(R.string.get_latest);
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
+        // Call async task that gets the API data and show that data in the view.
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
+        // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getMostPopularURL);
+
     }
 
     private class GetDataAsyncTask extends AsyncTask<String, Void, ViceSearchResultsClass> {
         @Override
         protected ViceSearchResultsClass doInBackground(String... myURL) {
-
             String data = "";
             try {
                 URL url = new URL(myURL[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();
-                Log.e("data:", data);
                 data = getInputData(inputStream);
             } catch (Throwable e) {
                 e.printStackTrace();
             }
 
+            // Convert the JSON data to Gson data
             Gson gson = new Gson();
             ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
 
-            for (int i = 0; i < results.getData().getItems().size(); i++) {
-                String title = results.getData().getItems().get(i).getTitle();
-                String author = results.getData().getItems().get(i).getAuthor();
-                Log.d("ASYNCTASK", "Title: " + title + ", by " + author);
-            }
+            String articleID = results.getData().getItems().get(0).getId();
+            Log.d("ASYNCTASK", "article id: " + results.getData().getItems().get(0).getId());
+            Log.d("ASYNCTASK", results.getData().getItems().get(0).getTitle());
+
+            /*
+            To get the article ID, call: results.getData().getItems().get(0).getId();
+            To get the category, call: results.getData().getItems().get(0).getCategory();
+             */
+
             return results;
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ViceSearchResultsClass result) {
             super.onPostExecute(result);
             ViceDataClass item = result.getData();
-            // TODO: Add the pulled data to the View.
+            // TODO: Add the data to the View.
         }
 
         public String getInputData(InputStream stream) throws IOException {

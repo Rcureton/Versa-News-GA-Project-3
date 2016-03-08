@@ -1,5 +1,7 @@
 package com.adi.ho.jackie.versa_news.GSONClasses;
 
+import com.google.gson.Gson;
+
 /**
  * Created by Rob on 3/7/16.
  */
@@ -104,9 +106,13 @@ public class ViceItemsClass {
     public void setImage(String image) {
         this.image = image;
     }
-//
-//    @Override
-//    public String toString() {
-//        return title;
-//    }
+
+    public String getArticleID(){
+        String data = "";
+        Gson gson = new Gson();
+        ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
+
+        String articleID = results.getData().getItems().get(0).getId();
+        return articleID;
+    }
 }
