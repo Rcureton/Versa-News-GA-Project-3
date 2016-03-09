@@ -48,7 +48,7 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
 
         LoadYoutubeTask load= new LoadYoutubeTask();
         load.execute();
-//        playerView.initialize(KEY, this);
+//
 
         mVideosList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
