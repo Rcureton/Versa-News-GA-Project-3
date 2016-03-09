@@ -4,6 +4,9 @@ import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +44,7 @@ import com.antonyt.infiniteviewpager.InfiniteViewPager;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -53,6 +57,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
@@ -95,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> colorArray;
     private ArrayList<String> statusColorArray;
     private HomeFragment homeFragment;
-
+private CollapsingToolbarLayout toolbarLayout;
+    private ImageView popularImage;
+    private ImageView popularImage2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+        toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        popularImage = (ImageView)findViewById(R.id.popular_stories_image);
+        popularImage2 =(ImageView)findViewById(R.id.popular_stories_image2);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -122,18 +132,21 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         fillColorArrays();
 
+     //   appBarLayout.setBackgroundColor(Color.parseColor(colorArray.get(3)));
         // Vice API URLs that data can be received through
         String getMostPopularURL = getResources().getString(R.string.get_most_popular);
         String getViceTodayURL = getResources().getString(R.string.get_vice_today);
-        String getLatestURL = getResources().getString(R.string.get_latest);
+
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         // Call async task that gets the API data and show that data in the view.
-        GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
+        DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
+        downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+       // GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
-        getDataAsyncTask.execute(getLatestURL);
+        //getDataAsyncTask.execute(getLatestURL);
 
       //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
@@ -157,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
             Gson gson = new Gson();
             ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
 
-            String articleID = results.getData().getItems().get(0).getId();
             Log.d("ASYNCTASK", "article id: " + results.getData().getItems().get(0).getId());
             Log.d("ASYNCTASK", results.getData().getItems().get(0).getTitle());
 
@@ -210,6 +222,59 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private class DownloadPopularArticlesAsyncTask extends AsyncTask<String,Void,List<ViceItemsClass>>{
+
+
+        @Override
+        protected List<ViceItemsClass> doInBackground(String... myURL) {
+            String data = "";
+            try {
+                URL url = new URL(myURL[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = connection.getInputStream();
+                data = getInputData(inputStream);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+            // Convert the JSON data to Gson data
+            Gson gson = new Gson();
+            ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
+
+            /*
+            To get the article ID, call: results.getData().getItems().get(0).getId();
+            To get the category, call: results.getData().getItems().get(0).getCategory();
+             */
+            ViceDataClass item = results.getData();
+
+            return item.getItems();
+        }
+        public String getInputData(InputStream stream) throws IOException {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+            String read;
+
+            while ((read = br.readLine()) != null) {
+                sb.append(read);
+            }
+
+            br.close();
+            return sb.toString();
+        }
+
+        @Override
+        protected void onPostExecute(List<ViceItemsClass> viceItemsClasses) {
+            String getLatestURL = getResources().getString(R.string.get_latest);
+            ViceItemsClass popularItem = viceItemsClasses.get(0);
+            ViceItemsClass popularItem2 = viceItemsClasses.get(1);
+            Picasso.with(MainActivity.this).load(popularItem.getImage()).into(popularImage);
+            Picasso.with(MainActivity.this).load(popularItem2.getImage()).into(popularImage2);
+            GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
+            getDataAsyncTask.execute(getLatestURL);
+
+        }
+    }
+
     private void fillFragmentList(){
         fragmentList = new ArrayList<>();
         fragmentList.add(homeFragment);
@@ -243,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-        viewPager.setCurrentItem(0);
+       // viewPager.setCurrentItem(0);
        // viewPager.addOnPageChangeListener(onPageChangeListener);
     }
 
@@ -256,21 +321,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             //Color Animation
-            position = position % 8;
-            Integer colorFrom = Color.parseColor(colorArray.get(position-1));
-            Integer colorTo = Color.parseColor(colorArray.get(position));
-            Integer colorStatusFrom = Color.parseColor(statusColorArray.get(position-1));
-            Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
-            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
+           // position = position % 8;
+//            position = (int)Math.random()*19;
+           // Integer colorFrom = Color.parseColor(toolbarLayout.getContentScrim().);
+//            Integer colorTo = Color.parseColor(colorArray.get(position));
+//            Integer colorStatusFrom = Color.parseColor(statusColorArray.get(position-1));
+//            Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
+          //  ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+//            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
 
-            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    toolbar.setBackgroundColor((Integer) animator.getAnimatedValue());
-                }
-            });
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animator) {
+//                    toolbarLayout.setBackgroundColor((Integer) animator.getAnimatedValue());
+//                }
+//            });
 
 //            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 //
@@ -284,13 +350,17 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                }
 //            });
-            colorAnimation.setDuration(1300);
-            colorAnimation.setStartDelay(0);
-            colorAnimation.start();
-            colorStatusAnimation.setDuration(1300);
-            colorStatusAnimation.setStartDelay(0);
-            colorStatusAnimation.start();
+//            colorAnimation.setDuration(1300);
+//            colorAnimation.setStartDelay(0);
+//            colorAnimation.start();
+//            colorStatusAnimation.setDuration(1300);
+//            colorStatusAnimation.setStartDelay(0);
+//            colorStatusAnimation.start();
 
+          //  MainActivity.this.setTheme(R.style.ToolbarTheme1);
+
+           // toolbarLayout.setContentScrimColor();
+            //toolbarLayout.getContentScrim().
         }
 
         @Override
@@ -300,14 +370,28 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void fillColorArrays(){
-        colorArray.add("#000000");
-        colorArray.add("#aa0000");
-        colorArray.add("#00aa00");
-        colorArray.add("#0000aa");
-        colorArray.add("#ff0000");
-        colorArray.add("#00ff00");
-        colorArray.add("#9900ff");
-        colorArray.add("#ff00ff");
+
+
+        String[] colorStrings = { "004D40",
+                "00695C",
+                "00796B",
+                "00897B",
+                "009688",
+                "26A69A",
+                "4DB6AC",
+                "80CBC4",
+                "B2DFDB",
+                "1B5E20",
+                "2E7D32",
+                "388E3C",
+                "43A047",
+                "4CAF50",
+                "66BB6A",
+                "81C784",
+                "A5D6A7",
+                "C8E6C9",
+                "E8F5E9"};
+       colorArray.addAll(Arrays.asList(colorStrings));
 
         statusColorArray.add("#000000");
         statusColorArray.add("#aa0000");
