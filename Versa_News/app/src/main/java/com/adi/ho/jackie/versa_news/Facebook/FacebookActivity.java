@@ -53,33 +53,47 @@ public class FacebookActivity extends AppCompatActivity {
 
 
         callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
+      //  TODO: THIS IS FOR THE SHARE BUTTON THAT FB GENERATED FOR ANDROID
+        ShareButton shareButton = (ShareButton)findViewById(R.id.sharebutton);
+        shareButton.setShareContent(content);
+}
+    //TODO: Need to create a method in here to get the article link to publish it to Facebook
+    ShareLinkContent content = new ShareLinkContent.Builder()
+            .setContentUrl(Uri.parse("https://developers.facebook.com"))
+            .build();
 
-            }
 
-            @Override
-            public void onCancel() {
 
-            }
 
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-
-         });
-        LoginManager.getInstance().logInWithPublishPermissions(
-                FacebookActivity.this,
-                Arrays.asList("publish_actions"));
+        //TODO:TO Prompt Login
+//        LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//
+//            }
+//
+//         });
+//        LoginManager.getInstance().logInWithPublishPermissions(
+//                FacebookActivity.this,
+//                Arrays.asList("publish_actions"));
+//
     }
 
 
 //                //TODO: NEED THESE TO CREATE THE SHARE DIALOG
 //                callbackManager = CallbackManager.Factory.create();
-//        shareDialog = new ShareDialog(this);
+//                 shareDialog = new ShareDialog(this);
 
 //        //TODO: CREATES A DIALOG OF WHAT YOU'RE SHARING, PROMPTS LOG IN
 //
@@ -99,20 +113,13 @@ public class FacebookActivity extends AppCompatActivity {
 //        likeView.setObjectIdAndType(
 //                "https://www.facebook.com/FacebookDevelopers",
 //                LikeView.ObjectType.PAGE);
-//        //TODO: THIS IS FOR THE SHARE BUTTON THAT FB GENERATED FOR ANDROID
-//        ShareButton shareButton = (ShareButton)findViewById(R.id.sharebutton);
-//        shareButton.setShareContent(content);
-//}
-//    //TODO: NOT SURE IF WE NEED THIS BECAUSE THERE WILL A SHARE BUTTON WITHIN THE ARTICLE WHICH IS THE CONTENT SO NO LINK NEEDED
-//    ShareLinkContent content = new ShareLinkContent.Builder()
-//            .setContentUrl(Uri.parse("https://developers.facebook.com"))
-//            .build();
+//
 //
 //    //TODO: NEED THIS METHOD FOR HANDLING THE RESULT OF THE CALLBACK
 //    @Override
 //    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
 //        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+
 
 

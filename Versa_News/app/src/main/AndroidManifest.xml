@@ -35,6 +35,10 @@
 
         <activity android:name=".Youtube.PlayVideos" />
         <activity android:name=".Facebook.FacebookActivity"></activity>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider{537549889739253}"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
