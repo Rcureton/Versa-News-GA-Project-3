@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
+import com.adi.ho.jackie.versa_news.ContentProvider.ViceContentProvider;
+import com.adi.ho.jackie.versa_news.ContentProvider.ViceDBHelper;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -44,9 +46,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         Cursor cursor = mResolver.query(ViceContentProvider.CONTENT_URI,null,null,null,null);
 
-        ViceDataClass stock;
+        // TODO: Update the columns and methods here.
+        ViceDataClass viceData;
         while(cursor.moveToNext()){
-            stock = getData(cursor.getString(cursor.getColumnIndex(ViceDBHelper.COLUMN_STOCK_SYMBOL)));
+            viceData = getData(cursor.getString(cursor.getColumnIndex(ViceDBHelper.COLUMN_STOCK_SYMBOL)));
             Uri uri = Uri.parse(ViceContentProvider.CONTENT_URI + "/" + cursor.getString(cursor.getColumnIndex(ViceDBHelper.COLUMN_ID)));
             ContentValues values = new ContentValues();
             values.put(ViceDBHelper.COLUMN_STOCK_PRICE, getData().getItems());
