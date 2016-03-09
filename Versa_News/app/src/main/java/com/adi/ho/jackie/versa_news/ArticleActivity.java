@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +30,7 @@ public class ArticleActivity extends AppCompatActivity {
     private ImageView articleImage;
     private TextView articleAuthor;
     private TextView articleDate;
-    private TextView articleBody;
+    private WebView articleBody;
     private TextView articleCategory;
     private TextView articleTitle;
     private String articleId;
@@ -41,20 +43,24 @@ public class ArticleActivity extends AppCompatActivity {
         articleImage = (ImageView) findViewById(R.id.imageView);
         articleAuthor = (TextView) findViewById(R.id.authorTextView);
         articleDate = (TextView) findViewById(R.id.dateTextView);
-        articleBody = (TextView) findViewById(R.id.articleText);
+        articleBody = (WebView) findViewById(R.id.articleText);
         articleCategory = (TextView) findViewById(R.id.articleCategory);
         articleTitle = (TextView) findViewById(R.id.titleView);
+
+      //  articleBody.getSettings().setLoadWithOverviewMode(true);
+        articleBody.getSettings().setUseWideViewPort(false);
 
         Intent idIntent = getIntent();
 
         if (idIntent != null) {
-            articleId = idIntent.getStringExtra(articleId);
+            articleId = idIntent.getStringExtra(MainActivity.ARTICLEID);
+            new LoadArticle().execute(articleId);
         }
 
 
     }
 
-    private class LoadNewsList extends AsyncTask<String, Void, ViceArticleClass> {
+    private class LoadArticle extends AsyncTask<String, Void, ViceArticleClass> {
 
 
         @Override
@@ -86,11 +92,16 @@ public class ArticleActivity extends AppCompatActivity {
             String body = viceArticle.getBody();
             String category = viceArticle.getCategory();
             String urlImage = viceArticle.getImage();
-
+            final String article = "<style>img{display: inline; height: auto; max-width: 100%;}</style>"+body;
             articleTitle.setText(title);
             articleDate.setText(date);
             articleAuthor.setText(author);
-            articleBody.setText(body);
+            articleBody.post(new Runnable() {
+                @Override
+                public void run() {
+                    articleBody.loadData(article,"text/html",null);
+                }
+            });
             articleCategory.setText(category);
             Picasso.with(ArticleActivity.this).load(urlImage).fit().into(articleImage);
 

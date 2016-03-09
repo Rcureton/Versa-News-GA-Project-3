@@ -29,6 +29,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.O
     public ArticleViewHolder(View itemView) {
         super(itemView);
         this.context = itemView.getContext();
+        itemView.setOnClickListener(this);
         mArticleHeadline = (TextView) itemView.findViewById(R.id.individual_fragment_card_headline);
         mArticleImage = (ImageView)itemView.findViewById(R.id.individual_fragment_card_image);
         mArticlePreview = (TextView)itemView.findViewById(R.id.individual_fragment_card_preview);
