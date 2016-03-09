@@ -15,7 +15,7 @@ public class ViceContentProvider extends ContentProvider {
 
     //TODO: Update everything stock-related to be Vice-related.
     private static final String AUTHORITY = "com.adi.ho.jackie.versa_news.ContentProvider.ViceContentProvider";
-    private static final String STOCK_PRICES_TABLE = ViceDBHelper.TABLE_STOCKS;
+    private static final String STOCK_PRICES_TABLE = ViceDBHelper.TABLE_VICE;
     public static final Uri CONTENT_URI = Uri.parse("content://"
             + AUTHORITY + "/" + STOCK_PRICES_TABLE);
 
@@ -86,7 +86,7 @@ public class ViceContentProvider extends ContentProvider {
 
         switch (uriType) {
             case STOCK_ID:
-                rowsUpdated = dbHelper.updateStockById(uri.getLastPathSegment(), values);
+                rowsUpdated = dbHelper.updateArticleById(uri.getLastPathSegment(), values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);

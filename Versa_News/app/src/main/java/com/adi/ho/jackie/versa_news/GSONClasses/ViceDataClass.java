@@ -1,5 +1,6 @@
 package com.adi.ho.jackie.versa_news.GSONClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 public class ViceDataClass {
 
     private ArrayList<ViceItemsClass> items;
+    private ViceArticleClass article;
 
     public void setItems(ArrayList<ViceItemsClass> items){
         this.items = items;
@@ -21,5 +23,8 @@ public class ViceDataClass {
     public String toString() {
         return items.size()+" item(s) in the search result";
     }
-    
+
+    public ViceArticleClass getArticle() {
+        return article;
+    }
 }
