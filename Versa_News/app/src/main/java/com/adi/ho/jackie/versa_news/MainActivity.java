@@ -1,29 +1,6 @@
 package com.adi.ho.jackie.versa_news;
 
-
-
-import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.MainThread;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
-import com.adi.ho.jackie.versa_news.Facebook.FacebookActivity;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookSdk;
-
-import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.LikeView;
-import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
-
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
-
 
 
 import android.content.Intent;
@@ -65,7 +42,6 @@ import com.antonyt.infiniteviewpager.InfiniteViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 import android.content.Context;
@@ -119,13 +95,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> statusColorArray;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
 
 
         setContentView(R.layout.tab_layout);
@@ -155,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         // Call async task that gets the API data and show that data in the view.
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
-
         getDataAsyncTask.execute(getLatestURL);
 
       //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
@@ -345,4 +319,3 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
-
