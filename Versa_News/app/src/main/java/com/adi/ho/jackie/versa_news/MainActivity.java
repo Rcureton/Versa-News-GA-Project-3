@@ -1,5 +1,16 @@
 package com.adi.ho.jackie.versa_news;
 
+import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
+
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
+
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,15 +37,6 @@ import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
-    private int horizontalChilds;
-    private int verticalChilds;
-    private TabLayout tabLayout;
-    private Toolbar toolbar;
-    private InfiniteViewPager viewPager;
-    private List<Fragment> fragmentList;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -58,15 +60,31 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+
 public class MainActivity extends AppCompatActivity {
 
-    ArrayAdapter<ViceItemsClass> mAdapter;
-    ListView mListView;
-
+    private int horizontalChilds;
+    private int verticalChilds;
+    private TabLayout tabLayout;
+    private Toolbar toolbar;
+    private InfiniteViewPager viewPager;
+    private List<Fragment> fragmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        Button button= (Button)findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MainActivity.this, PlayVideos.class);
+                startActivity(intent);
+            }
+        });
+
 
         setContentView(R.layout.tab_layout);
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -103,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getMostPopularURL);
+
 
     }
 

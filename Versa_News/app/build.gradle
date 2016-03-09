@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -31,6 +32,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
 
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
+
+
     compile 'com.android.support:recyclerview-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
@@ -40,5 +45,6 @@ dependencies {
     compile 'com.github.antonyt:InfiniteViewPager:v1.0.0'
 
     compile 'com.google.code.gson:gson:2.6'
+
 
 }

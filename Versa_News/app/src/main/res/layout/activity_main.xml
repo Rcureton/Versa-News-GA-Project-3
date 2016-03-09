@@ -10,7 +10,18 @@
     android:id="@+id/container"
     tools:context=".activity.MainActivity">
 
-<<<<<<< HEAD
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!" />
+
+    <Button
+        android:id="@+id/button"
+        android:text="videos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_recycle_list"
         android:paddingTop="8dp"
@@ -19,13 +30,5 @@
         android:layout_height="match_parent"/>
 
 </RelativeLayout>
-=======
-    <!--Delete this after testing, before merge-->
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    </ListView>
-</RelativeLayout>
->>>>>>> edebf69db7927302e4a9996974d25e6e8f84f7ed
+
