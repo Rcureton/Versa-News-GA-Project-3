@@ -3,7 +3,11 @@ package com.adi.ho.jackie.versa_news;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -69,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private InfiniteViewPager viewPager;
     private List<Fragment> fragmentList;
+    public static int NOTIFICATION_ID = 1;
+    NotificationCompat.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +128,25 @@ public class MainActivity extends AppCompatActivity {
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getMostPopularURL);
+
+
+        /* Notifications */
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+        // TODO: Replace setSmallIcon with our app icon.
+        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+        builder.setContentTitle("Vice Versa");
+        // TODO: Replace setContentText with an incoming headline or some other notification. This needs to work in conjunction with the sync adapter. Do we need a content observer?
+        builder.setContentText("Sample text");
+        // TODO: Set intent to go directly to an article when notification is tapped?
+        Intent intent= new Intent(MainActivity.this,MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,(int) System.currentTimeMillis(),intent,0);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+
+        Notification notification= builder.build();
+        NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(NOTIFICATION_ID, notification);
 
 
     }
@@ -194,4 +220,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Clear notification when app is opened.
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
 }
