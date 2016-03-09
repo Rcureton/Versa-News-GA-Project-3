@@ -13,4 +13,9 @@
     <style name="MyAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="MyAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="ToolbarTheme">
+    <item name="android:background">@color/colorPrimaryNews</item>
+    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
 </resources>
