@@ -1,9 +1,11 @@
 package com.adi.ho.jackie.versa_news.Fragments;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.adi.ho.jackie.versa_news.R;
 import com.adi.ho.jackie.versa_news.RecyclerViewStuff.ArticleRecyclerAdapter;
+import com.adi.ho.jackie.versa_news.RecyclerViewStuff.VerticalSpaceItemDecoration;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -42,6 +45,9 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final Context contextWrapper = new ContextThemeWrapper(getActivity(), R.style.NewsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(contextWrapper);
+
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_news, container, false);
@@ -59,6 +65,7 @@ public class NewsFragment extends Fragment {
         newsRecycler.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         newsRecycler.setLayoutManager(linearLayoutManager);
+        newsRecycler.addItemDecoration(new VerticalSpaceItemDecoration(30));
 
     }
 
@@ -79,7 +86,6 @@ public class NewsFragment extends Fragment {
 
             Gson gson = new Gson();
             ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
-
             ViceDataClass item = results.getData();
 
             return item.getItems();

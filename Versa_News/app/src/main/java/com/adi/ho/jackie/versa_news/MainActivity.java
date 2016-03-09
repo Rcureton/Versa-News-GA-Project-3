@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private int horizontalChilds;
     private int verticalChilds;
     private TabLayout tabLayout;
-    private Toolbar toolbar;
+    public Toolbar toolbar;
     private InfiniteViewPager viewPager;
     private List<Fragment> fragmentList;
     private List<ViceItemsClass> listViceArticles;
