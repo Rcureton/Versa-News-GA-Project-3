@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.R;
 import com.squareup.picasso.Picasso;
 
@@ -16,12 +17,12 @@ import java.util.List;
  */
 public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
 
-    private List<Object> somelist;
+    private List<ViceItemsClass> viceArticleList;
     private Context context;
 
-    public ArticleRecyclerAdapter(Context context, List<Object> someList){
+    public ArticleRecyclerAdapter(Context context, List<ViceItemsClass> articleList){
         this.context = context;
-        this.somelist = someList;
+        viceArticleList = articleList;
     }
 
     @Override
@@ -33,19 +34,20 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleViewHold
 
     @Override
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
-        String urlImage = somelist.get(0).toString(); // TODO: get the real url here
-        String headline = somelist.get(1).toString();
-        String preview = somelist.get(2).toString();
+        String urlImage = viceArticleList.get(position).getImage(); // TODO: get the real url here
+        String headline = viceArticleList.get(position).getTitle();
+        String preview = viceArticleList.get(position).getPreview();
 
-        //Picasso.with(context).load(urlImage).fit().into(holder.mArticleImage);
-        //holder.mArticleHeadline.setText(headline);
-        //holder.mArticlePreview.setText(preview);
+        Picasso.with(context).load(urlImage).fit().into(holder.mArticleImage);
+        holder.mArticleHeadline.setText(headline);
+        holder.mArticlePreview.setText(preview);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return somelist.size();
+        return viceArticleList.size();
+//        return 0;
     }
 }

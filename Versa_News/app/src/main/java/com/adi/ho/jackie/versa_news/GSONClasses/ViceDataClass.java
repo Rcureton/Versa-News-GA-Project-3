@@ -1,5 +1,6 @@
 package com.adi.ho.jackie.versa_news.GSONClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -21,5 +22,5 @@ public class ViceDataClass {
     public String toString() {
         return items.size()+" item(s) in the search result";
     }
-    
+
 }

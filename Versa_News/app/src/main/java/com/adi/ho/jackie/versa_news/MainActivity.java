@@ -1,6 +1,7 @@
 package com.adi.ho.jackie.versa_news;
 
 
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,18 +24,6 @@ import com.adi.ho.jackie.versa_news.ViewPagerAdapter.FragmentAdapter;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-
-    private int horizontalChilds;
-    private int verticalChilds;
-    private TabLayout tabLayout;
-    private Toolbar toolbar;
-    private InfiniteViewPager viewPager;
-    private List<Fragment> fragmentList;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,6 +31,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -58,11 +48,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    ArrayAdapter<ViceItemsClass> mAdapter;
-    ListView mListView;
-
+    private int horizontalChilds;
+    private int verticalChilds;
+    private TabLayout tabLayout;
+    private Toolbar toolbar;
+    private InfiniteViewPager viewPager;
+    private List<Fragment> fragmentList;
+    private List<ViceItemsClass> listViceArticles;
+    private Bundle popularArticles;
+    private ArrayList<String> urlArray;
+    private ArrayList<String> headlineArray;
+    private ArrayList<String> previewArray;
+    private AppBarLayout appBarLayout;
+    private boolean loadingFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,22 +76,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
 
-        fillFragmentList();
+        listViceArticles = new ArrayList<>();
+        urlArray = new ArrayList<>();
+        headlineArray = new ArrayList<>();
+        previewArray = new ArrayList<>();
+        popularArticles = new Bundle();
 
-        viewPager.setAdapter(new InfinitePagerAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                Fragment frag = null;
-                    frag = fragmentList.get(position);
-                    return frag;
-            }
-
-            @Override
-            public int getCount() {
-                return fragmentList.size();
-            }
-        }));
 
 
         // Vice API URLs that data can be received through
@@ -102,13 +97,15 @@ public class MainActivity extends AppCompatActivity {
         // Call async task that gets the API data and show that data in the view.
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
-        getDataAsyncTask.execute(getMostPopularURL);
+        getDataAsyncTask.execute(getLatestURL);
+
+      //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
     }
 
-    private class GetDataAsyncTask extends AsyncTask<String, Void, ViceSearchResultsClass> {
+    private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
         @Override
-        protected ViceSearchResultsClass doInBackground(String... myURL) {
+        protected List<ViceItemsClass> doInBackground(String... myURL) {
             String data = "";
             try {
                 URL url = new URL(myURL[0]);
@@ -131,20 +128,31 @@ public class MainActivity extends AppCompatActivity {
             To get the article ID, call: results.getData().getItems().get(0).getId();
             To get the category, call: results.getData().getItems().get(0).getCategory();
              */
+            ViceDataClass item = results.getData();
 
-            return results;
+            return item.getItems();
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
         }
 
         @Override
-        protected void onPostExecute(ViceSearchResultsClass result) {
-            super.onPostExecute(result);
-            ViceDataClass item = result.getData();
-            // TODO: Add the data to the View.
+        protected void onPostExecute(List<ViceItemsClass> result) {
+            listViceArticles = result;
+            loadingFinished = true;
+            for (int i = 0 ; i < 8; i++){
+                urlArray.add(listViceArticles.get(i).getImage());
+                headlineArray.add(listViceArticles.get(i).getTitle());
+                previewArray.add(listViceArticles.get(i).getPreview());
+            }
+            popularArticles.putStringArrayList("POPULARURL", urlArray);
+            popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
+            popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
+            launchFragments();
+
         }
 
         public String getInputData(InputStream stream) throws IOException {
@@ -174,5 +182,38 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new TravelFragment());
 
     }
+
+    private void launchFragments(){
+        fillFragmentList();
+
+        viewPager.setAdapter(new InfinitePagerAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                Fragment frag = null;
+
+                frag = fragmentList.get(position);
+
+                frag.setArguments(popularArticles);
+
+                return frag;
+            }
+
+            @Override
+            public int getCount() {
+                return fragmentList.size();
+            }
+        }));
+
+        viewPager.setCurrentItem(0);
+    }
+
+//    AppBarLayout.OnOffsetChangedListener appBarOffsetListener = new AppBarLayout.OnOffsetChangedListener() {
+//        @Override
+//        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//            if ((verticalOffset == 0 || verticalOffset <= toolbar.getHeight()) && loadingFinished ){
+//                launchFragments();
+//            }
+//        }
+//    };
 
 }

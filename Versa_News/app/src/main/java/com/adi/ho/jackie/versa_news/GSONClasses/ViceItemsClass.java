@@ -1,5 +1,8 @@
 package com.adi.ho.jackie.versa_news.GSONClasses;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 
 /**
@@ -115,4 +118,5 @@ public class ViceItemsClass {
         String articleID = results.getData().getItems().get(0).getId();
         return articleID;
     }
+
 }
