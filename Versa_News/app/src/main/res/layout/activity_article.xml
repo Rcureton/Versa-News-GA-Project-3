@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="CATEGORY"
+        android:text="CATEGORy"
         android:id="@+id/textView2"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
@@ -79,6 +79,7 @@
         android:paddingRight="3dp"
         android:textSize="15sp"
         android:textColor="#ffffff" />
+
 
 </RelativeLayout>
 </ScrollView>

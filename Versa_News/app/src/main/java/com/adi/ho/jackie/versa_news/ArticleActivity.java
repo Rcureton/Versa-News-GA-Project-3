@@ -26,5 +26,6 @@ public class ArticleActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(ArticleActivity.this).load("https://vice-images.vice.com/images/content-images-crops/2016/03/07/the-vice-morning-bulletin-03-07-16-body-image-1457354769-size_1000.jpg").fit().into(mImageView);
 
-    }
+    }  //
 }
+ //
