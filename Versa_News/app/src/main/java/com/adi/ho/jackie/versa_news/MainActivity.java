@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         viewPager.setCurrentItem(0);
-        viewPager.addOnPageChangeListener(onPageChangeListener);
+       // viewPager.addOnPageChangeListener(onPageChangeListener);
     }
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
