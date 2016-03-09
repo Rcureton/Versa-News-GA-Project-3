@@ -130,16 +130,15 @@ public class MainActivity extends AppCompatActivity {
         getDataAsyncTask.execute(getMostPopularURL);
 
 
-        /* Notifications */
+        /* Notifications
+         * Sent when the app syncs in the background and new articles are fetched.  */
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
         // TODO: Replace setSmallIcon with our app icon.
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
         builder.setContentTitle("Vice Versa");
-        // TODO: Replace setContentText with an incoming headline or some other notification. This needs to work in conjunction with the sync adapter. Do we need a content observer?
-        builder.setContentText("Sample text");
-        // TODO: Set intent to go directly to an article when notification is tapped?
-        Intent intent= new Intent(MainActivity.this,MainActivity.class);
+        builder.setContentText("New articles are now available.");
+        Intent intent = new Intent(MainActivity.this,MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,(int) System.currentTimeMillis(),intent,0);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);

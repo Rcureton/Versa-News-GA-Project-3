@@ -15,6 +15,7 @@ import android.util.Log;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.ContentProvider.ViceContentProvider;
 import com.adi.ho.jackie.versa_news.ContentProvider.ViceDBHelper;
+import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.adi.ho.jackie.versa_news.MainActivity;
 import com.google.gson.Gson;
 
@@ -51,33 +52,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         Log.d(SyncAdapter.class.getName(), "Starting sync");
         Cursor cursor = mResolver.query(ViceContentProvider.CONTENT_URI,null,null,null,null);
-/*
-        // TODO: Update the methods here to refresh the data that should be refreshed. The refreshed data should update the database and replace the existing database data.
-        ViceDataClass title;
-        while(cursor.moveToNext()){
-            title = getData(cursor.getString(cursor.getColumnIndex(ViceDBHelper.COLUMN_TITLE)));
-            Uri uri = Uri.parse(ViceContentProvider.CONTENT_URI + "/" + cursor.getString(cursor.getColumnIndex(ViceDBHelper.COLUMN_ID)));
-            ContentValues values = new ContentValues();
-            values.put(ViceDBHelper.COLUMN_BODY, getData(MainActivity.getMostPopularURL).getItems());
-            mResolver.update(uri,values,null,null);
-        }
-*/
+
     }
 
-    private ViceDataClass getData(String viceURL){
-        String data ="";
+    private ViceSearchResultsClass getData(String viceURL){
+        String data = "";
         try {
             URL url = new URL(viceURL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            InputStream inStream = connection.getInputStream();
-            data = getInputData(inStream);
+            InputStream inputStream = connection.getInputStream();
+            data = getInputData(inputStream);
         } catch (Throwable e) {
             e.printStackTrace();
         }
 
+        // Convert the JSON data to Gson data
         Gson gson = new Gson();
-        return gson.fromJson(data,ViceDataClass.class);
+        ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
+
+        return results;
     }
 
     private String getInputData(InputStream inStream) throws IOException {
