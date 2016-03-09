@@ -4,4 +4,6 @@
     <string name="search">Search</string>
     <string name="failed">Failed to initialize Youtube Player</string>
     <string name="facebook_app_id">537549889739253</string>
+    <string name="facebook_app_secret">07ccc9192d1b16627d00ed16c6af16e5</string>
+    <string name="accessToken">537549889739253|07ccc9192d1b16627d00ed16c6af16e5</string>
 </resources>

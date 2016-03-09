@@ -7,23 +7,29 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.adi.ho.jackie.versa_news.MainActivity">
+    tools:context="com.adi.ho.jackie.versa_news.Facebook.FacebookActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
-    <Button
-        android:id="@+id/button"
-        android:text="videos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-    <Button
-        android:id="@+id/facebook"
+    <com.facebook.share.widget.LikeView
+        android:id="@+id/likeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button"/>
+
+    <com.facebook.share.widget.ShareButton
+        android:id="@+id/sharebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/likeView"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/sharebutton"/>
+
+
+
 </RelativeLayout>
