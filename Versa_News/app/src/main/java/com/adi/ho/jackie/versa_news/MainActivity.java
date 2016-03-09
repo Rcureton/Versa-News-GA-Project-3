@@ -59,6 +59,7 @@ import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -88,11 +89,12 @@ public class MainActivity extends AppCompatActivity {
     private Bundle popularArticles;
     private ArrayList<String> urlArray;
     private ArrayList<String> headlineArray;
-    private ArrayList<String> previewArray;
+    private ArrayList<String> idArray;
     private AppBarLayout appBarLayout;
     private boolean loadingFinished = false;
     private ArrayList<String> colorArray;
     private ArrayList<String> statusColorArray;
+    private HomeFragment homeFragment;
 
 
     @Override
@@ -113,10 +115,11 @@ public class MainActivity extends AppCompatActivity {
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
         headlineArray = new ArrayList<>();
-        previewArray = new ArrayList<>();
+        idArray = new ArrayList<>();
         popularArticles = new Bundle();
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
+        homeFragment = new HomeFragment();
         fillColorArrays();
 
         // Vice API URLs that data can be received through
@@ -180,12 +183,14 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0 ; i < 8; i++){
                 urlArray.add(listViceArticles.get(i).getImage());
                 headlineArray.add(listViceArticles.get(i).getTitle());
-                previewArray.add(listViceArticles.get(i).getPreview());
+                idArray.add(listViceArticles.get(i).getId());
             }
             popularArticles.putStringArrayList("POPULARURL", urlArray);
             popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
-            popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
+            popularArticles.putStringArrayList("POPULARID", idArray);
             launchFragments();
+            setImagesHomeFragment(urlArray,headlineArray,idArray);
+            //Set images from home fragment
 
         }
 
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fillFragmentList(){
         fragmentList = new ArrayList<>();
-        fragmentList.add(new HomeFragment());
+        fragmentList.add(homeFragment);
         fragmentList.add(new NewsFragment());
         fragmentList.add(new FashionFragment());
         fragmentList.add(new TechFragment());
@@ -312,6 +317,19 @@ public class MainActivity extends AppCompatActivity {
         statusColorArray.add("#00ff00");
         statusColorArray.add("#9900ff");
         statusColorArray.add("#ff00ff");
+
+
+    }
+
+    public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray){
+        Picasso.with(MainActivity.this).load(imageUrls.get(0)).fit().into(homeFragment.popularImage1);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(1)).fit().into(homeFragment.popularImage2);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(2)).fit().into(homeFragment.popularImage3);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(3)).fit().into(homeFragment.popularImage4);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(4)).fit().into(homeFragment.popularImage5);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(5)).fit().into(homeFragment.popularImage6);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(6)).fit().into(homeFragment.popularImage7);
+        Picasso.with(homeFragment.getContext()).load(imageUrls.get(7)).fit().into(homeFragment.popularImage8);
 
 
     }
