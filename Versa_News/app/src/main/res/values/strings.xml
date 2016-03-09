@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">Versa_News</string>
+
     <string name="youtubeapi">AIzaSyCb3oxi30gJfpVpClvuvU_YlF7xVKXHOS8</string>
     <string name="search">Search</string>
     <string name="failed">Failed to initialize Youtube Player</string>
 
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+=======
+    <string name="get_vice_today">http://vice.com/api/getvicetoday/</string>
+    <string name="get_most_popular">http://vice.com/api/getmostpopular/</string>
+    <string name="get_latest">http://vice.com/api/getlatest/</string>
+    <string name="get_latest_category">http://vice.com/api/getlatest/category/</string>
+    <string name="get_article">http://vice.com/api/article/</string>
+>>>>>>> edebf69db7927302e4a9996974d25e6e8f84f7ed
+>>>>>>> origin
 </resources>
