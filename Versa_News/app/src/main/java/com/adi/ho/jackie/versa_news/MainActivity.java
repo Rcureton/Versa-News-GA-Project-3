@@ -30,23 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //
-        Button facebook= (Button)findViewById(R.id.facebook);
-        facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(MainActivity.this, FacebookActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PlayVideos.class);
-                startActivity(intent);
-            }
-        });
     }
 }
 
