@@ -105,14 +105,6 @@ public class HomeFragment extends Fragment {
         latestHeadline7 = (TextView)view.findViewById(R.id.latest_news_7_text);
         latestHeadline8 = (TextView)view.findViewById(R.id.latest_news_8_text);
 
-        latestId1 = (TextView)view.findViewById(R.id.latest_news_1_id);
-        latestId2 = (TextView)view.findViewById(R.id.latest_news_2_id);
-        latestId3 = (TextView)view.findViewById(R.id.latest_news_3_id);
-        latestId4 = (TextView)view.findViewById(R.id.latest_news_4_id);
-        latestId5 = (TextView)view.findViewById(R.id.latest_news_5_id);
-        latestId6 = (TextView)view.findViewById(R.id.latest_news_6_id);
-        latestId7 = (TextView)view.findViewById(R.id.latest_news_7_id);
-        latestId8 = (TextView)view.findViewById(R.id.latest_news_8_id);
 
         /*
          *
