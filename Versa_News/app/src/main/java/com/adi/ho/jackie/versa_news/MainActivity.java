@@ -1,6 +1,10 @@
 package com.adi.ho.jackie.versa_news;
 
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> previewArray;
     private AppBarLayout appBarLayout;
     private boolean loadingFinished = false;
+    private ArrayList<String> colorArray;
+    private ArrayList<String> statusColorArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
         headlineArray = new ArrayList<>();
         previewArray = new ArrayList<>();
         popularArticles = new Bundle();
-
-
+        colorArray = new ArrayList<>();
+        statusColorArray = new ArrayList<>();
+        fillColorArrays();
 
         // Vice API URLs that data can be received through
         String getMostPopularURL = getResources().getString(R.string.get_most_popular);
@@ -205,15 +212,83 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         viewPager.setCurrentItem(0);
+        viewPager.addOnPageChangeListener(onPageChangeListener);
     }
 
-//    AppBarLayout.OnOffsetChangedListener appBarOffsetListener = new AppBarLayout.OnOffsetChangedListener() {
-//        @Override
-//        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//            if ((verticalOffset == 0 || verticalOffset <= toolbar.getHeight()) && loadingFinished ){
-//                launchFragments();
-//            }
-//        }
-//    };
+    ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            //Color Animation
+            position = position % 8;
+            Integer colorFrom = Color.parseColor(colorArray.get(position-1));
+            Integer colorTo = Color.parseColor(colorArray.get(position));
+            Integer colorStatusFrom = Color.parseColor(statusColorArray.get(position-1));
+            Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
+
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    toolbar.setBackgroundColor((Integer) animator.getAnimatedValue());
+                }
+            });
+
+//            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animator) {
+//                    if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+//                        getActivity().getWindow().setStatusBarColor((Integer) animator.getAnimatedValue());
+//                    }
+//                    if (currentapiVersion == Build.VERSION_CODES.KITKAT) {
+//                        tintManager.setStatusBarTintColor((Integer) animator.getAnimatedValue());
+//                    }
+//                }
+//            });
+            colorAnimation.setDuration(1300);
+            colorAnimation.setStartDelay(0);
+            colorAnimation.start();
+            colorStatusAnimation.setDuration(1300);
+            colorStatusAnimation.setStartDelay(0);
+            colorStatusAnimation.start();
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    public void fillColorArrays(){
+        colorArray.add("#000000");
+        colorArray.add("#aa0000");
+        colorArray.add("#00aa00");
+        colorArray.add("#0000aa");
+        colorArray.add("#ff0000");
+        colorArray.add("#00ff00");
+        colorArray.add("#9900ff");
+        colorArray.add("#ff00ff");
+
+        statusColorArray.add("#000000");
+        statusColorArray.add("#aa0000");
+        statusColorArray.add("#00aa00");
+        statusColorArray.add("#0000aa");
+        statusColorArray.add("#ff0000");
+        statusColorArray.add("#00ff00");
+        statusColorArray.add("#9900ff");
+        statusColorArray.add("#ff00ff");
+
+
+    }
+
+
 
 }

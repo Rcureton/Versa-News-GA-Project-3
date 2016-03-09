@@ -15,7 +15,7 @@ import org.w3c.dom.Text;
  */
 
 
-public class ArticleViewHolder extends RecyclerView.ViewHolder {
+public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView mArticleHeadline;
     public ImageView mArticleImage;
@@ -28,6 +28,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder {
         mArticleHeadline = (TextView) itemView.findViewById(R.id.individual_fragment_card_headline);
         mArticleImage = (ImageView)itemView.findViewById(R.id.individual_fragment_card_image);
         mArticlePreview = (TextView)itemView.findViewById(R.id.individual_fragment_card_preview);
+
+    }
+
+    @Override
+    public void onClick(View v) {
 
     }
 }

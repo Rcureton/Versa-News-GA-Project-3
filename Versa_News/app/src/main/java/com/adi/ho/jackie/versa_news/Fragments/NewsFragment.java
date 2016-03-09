@@ -45,8 +45,6 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final Context contextWrapper = new ContextThemeWrapper(getActivity(), R.style.NewsTheme);
-        LayoutInflater localInflater = inflater.cloneInContext(contextWrapper);
 
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
