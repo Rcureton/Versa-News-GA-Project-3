@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
@@ -10,7 +20,6 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
     }
     buildTypes {
         release {
@@ -25,10 +34,11 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
@@ -41,5 +51,12 @@ dependencies {
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     compile 'com.android.support:support-v4:23+'
     compile 'com.android.support:appcompat-v7:23+'
-}
 
+    compile('com.twitter.sdk.android:twitter:1.13.0@aar') {
+        transitive = true;
+    }
+    compile('com.twitter.sdk.android:tweet-composer:1.0.3@aar') {
+        transitive = true;
+    }
+}
+//For Commit

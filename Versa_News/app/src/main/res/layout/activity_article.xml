@@ -75,22 +75,17 @@
                 android:paddingRight="3dp"
                 android:textSize="15sp"
                 android:textColor="#ffffff" />
-            <!--<ImageButton-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/twitterButton"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:layout_below="@+id/textView"-->
-                <!--android:padding="5dp"-->
-                <!--android:background="#FFFFFF" />-->
-            <!--&lt;!&ndash;android:src="@drawable/ic_action_twitter"&ndash;&gt;-->
-            <!--<com.twitter.sdk.android.core.identity.TwitterLoginButton-->
-                <!--android:id="@+id/twitter_login_button"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerInParent="true" />-->
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/twitterButton"
+                android:padding="5dp"
+                android:background="#00ffffff"
+                android:src = "@drawable/ic_action_twitter"
+                android:layout_below="@+id/imageView"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+            <!--android:src="@drawable/ic_action_twitter"-->
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
