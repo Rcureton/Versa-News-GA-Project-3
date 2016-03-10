@@ -535,23 +535,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-        private android.support.v4.app.FragmentManager fragmentManager;
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-
-    }
 
     private void selectItem(int position) {
 
