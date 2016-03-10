@@ -15,8 +15,10 @@ import android.util.Log;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.ContentProvider.ViceContentProvider;
 import com.adi.ho.jackie.versa_news.ContentProvider.ViceDBHelper;
+import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.adi.ho.jackie.versa_news.MainActivity;
+import com.adi.ho.jackie.versa_news.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -25,11 +27,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by Rob on 3/8/16.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
+
     ContentResolver mResolver;
 
     public SyncAdapter(Context context, boolean autoInitialize) {
@@ -50,15 +54,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             ContentProviderClient provider,
             SyncResult syncResult) {
 
-        Log.d(SyncAdapter.class.getName(), "Starting sync");
-        Cursor cursor = mResolver.query(ViceContentProvider.CONTENT_URI,null,null,null,null);
+        getLatestFromAPI();
 
     }
 
-    private ViceSearchResultsClass getData(String viceURL){
+    public List<ViceItemsClass> getLatestFromAPI(){
         String data = "";
         try {
-            URL url = new URL(viceURL);
+            URL url = new URL("http://vice.com/api/getlatest/");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = connection.getInputStream();
             data = getInputData(inputStream);
@@ -69,9 +72,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // Convert the JSON data to Gson data
         Gson gson = new Gson();
         ViceSearchResultsClass results = gson.fromJson(data, ViceSearchResultsClass.class);
+        ViceDataClass item = results.getData();
 
-        return results;
+        Log.d("SYNCADAPTOR", "Starting sync");
+        for (int i = 0 ; i < 8; i++) {
+            Log.d("ASYNCTASK", results.getData().getItems().get(0).getTitle());
+        }
+
+        return item.getItems();
     }
+
 
     private String getInputData(InputStream inStream) throws IOException {
         StringBuilder builder = new StringBuilder();
