@@ -13,9 +13,12 @@
     <style name="MyAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="MyAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="ToolbarTheme">
-    <item name="android:background">@color/colorPrimaryNews</item>
-    <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <style name="ToolbarTheme1" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimaryNews</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkNews</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>
