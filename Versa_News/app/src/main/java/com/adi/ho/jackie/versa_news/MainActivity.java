@@ -1,6 +1,6 @@
 package com.adi.ho.jackie.versa_news;
 
-<<<<<<< HEAD
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-=======
+
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
@@ -89,7 +89,7 @@ import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>> master
+
 
 public class MainActivity extends AppCompatActivity {
     private String[] mNavigationDrawerItemTitles;
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -155,53 +155,55 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getLatestURL);
 
-      //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
+        //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
-ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
+        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
 
-        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
-        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
-        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_today, "Loaded");
+//        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
+//        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
+//        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_today, "Loaded");
 
 
-        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView)findViewById(R.id.left_drawer);
+//        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
+        //  mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+//        mDrawerList = (ListView)findViewById(R.id.left_drawer);
 
-        DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
-        mDrawerList.setAdapter(adapter);
+        // DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
+        // mDrawerList.setAdapter(adapter);
 
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mTitle = mDrawerTitle = getTitle();
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close
-        ) {
+//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
+//                this,
+//                mDrawerLayout,
+//                toolbar,
+//                R.string.drawer_open,
+//                R.string.drawer_close
+//        )
+        {
 
             /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
-            }
+//            public void onDrawerClosed(View view) {
+//                super.onDrawerClosed(view);
+//                getSupportActionBar().setTitle(mTitle);
+//            }
+//
+//            /** Called when a drawer has settled in a completely open state. */
+//            public void onDrawerOpened(View drawerView) {
+//                super.onDrawerOpened(drawerView);
+//                getSupportActionBar().setTitle(mDrawerTitle);
+//            }
+//        };
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
-            }
-        };
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
+        }
     }
 
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
@@ -384,8 +386,6 @@ ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
     }
 
 
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -413,13 +413,13 @@ ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
 
         switch (position) {
             case 0:
-                fragment = new CreateFragment();
+             //   fragment = new CreateFragment();
                 break;
             case 1:
-                fragment = new ReadFragment();
+               // fragment = new ReadFragment();
                 break;
             case 2:
-                fragment = new ReadTop();
+                //fragment = new ReadTop();
                 break;
 
             default:
@@ -428,7 +428,7 @@ ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+           // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
@@ -454,5 +454,6 @@ ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
 
 
 }
+    }
 
 

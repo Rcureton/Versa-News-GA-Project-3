@@ -1,14 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.+'
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
