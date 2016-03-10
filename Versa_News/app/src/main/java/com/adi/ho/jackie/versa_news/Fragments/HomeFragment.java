@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,7 +84,7 @@ public class HomeFragment extends Fragment {
         ArrayList<String> headlineArray = getArguments().getStringArrayList("POPULARHEADLINE");
         idArray = getArguments().getStringArrayList("POPULARID");
 
-
+        //Toolbar toolbar = (Toolbar)view.findViewById(R.id.main_toolbar);
         /*
          *
          */

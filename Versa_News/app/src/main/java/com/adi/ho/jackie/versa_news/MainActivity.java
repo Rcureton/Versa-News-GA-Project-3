@@ -1,5 +1,9 @@
 package com.adi.ho.jackie.versa_news;
 
+import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
+import com.ToxicBakery.viewpager.transforms.BackgroundToForegroundTransformer;
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
@@ -77,6 +81,7 @@ import java.util.ArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -101,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> statusColorArray;
     private HomeFragment homeFragment;
 private CollapsingToolbarLayout toolbarLayout;
-    private ImageView popularImage;
-    private ImageView popularImage2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +119,9 @@ private CollapsingToolbarLayout toolbarLayout;
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
-        toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
-        popularImage = (ImageView)findViewById(R.id.popular_stories_image);
-        popularImage2 =(ImageView)findViewById(R.id.popular_stories_image2);
+        //tabLayout = (TabLayout) findViewById(R.id.tabs);
+        //appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+        //toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -265,10 +266,6 @@ private CollapsingToolbarLayout toolbarLayout;
         @Override
         protected void onPostExecute(List<ViceItemsClass> viceItemsClasses) {
             String getLatestURL = getResources().getString(R.string.get_latest);
-            ViceItemsClass popularItem = viceItemsClasses.get(0);
-            ViceItemsClass popularItem2 = viceItemsClasses.get(1);
-            Picasso.with(MainActivity.this).load(popularItem.getImage()).into(popularImage);
-            Picasso.with(MainActivity.this).load(popularItem2.getImage()).into(popularImage2);
             GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
             getDataAsyncTask.execute(getLatestURL);
 
@@ -308,8 +305,9 @@ private CollapsingToolbarLayout toolbarLayout;
             }
         }));
 
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
        // viewPager.setCurrentItem(0);
-       // viewPager.addOnPageChangeListener(onPageChangeListener);
+        viewPager.addOnPageChangeListener(onPageChangeListener);
     }
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -321,22 +319,24 @@ private CollapsingToolbarLayout toolbarLayout;
         @Override
         public void onPageSelected(int position) {
             //Color Animation
-           // position = position % 8;
-//            position = (int)Math.random()*19;
-           // Integer colorFrom = Color.parseColor(toolbarLayout.getContentScrim().);
-//            Integer colorTo = Color.parseColor(colorArray.get(position));
-//            Integer colorStatusFrom = Color.parseColor(statusColorArray.get(position-1));
-//            Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
-          //  ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-//            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
+            Random rand = new Random();
+            position = rand.nextInt(19);
+            ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
 
-//            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            Integer colorFrom = toolbarColor.getColor();
+            Integer colorTo = Color.parseColor(colorArray.get(position));
+           // Integer colorStatusFrom = getS
+            //Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            //ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
 
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animator) {
-//                    toolbarLayout.setBackgroundColor((Integer) animator.getAnimatedValue());
-//                }
-//            });
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    toolbar.setBackgroundColor((Integer) animator.getAnimatedValue());
+                }
+            });
 
 //            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 //
@@ -350,17 +350,16 @@ private CollapsingToolbarLayout toolbarLayout;
 //                    }
 //                }
 //            });
-//            colorAnimation.setDuration(1300);
-//            colorAnimation.setStartDelay(0);
-//            colorAnimation.start();
+            colorAnimation.setDuration(1300);
+            colorAnimation.setStartDelay(0);
+            colorAnimation.start();
 //            colorStatusAnimation.setDuration(1300);
 //            colorStatusAnimation.setStartDelay(0);
 //            colorStatusAnimation.start();
 
-          //  MainActivity.this.setTheme(R.style.ToolbarTheme1);
+            MainActivity.this.setTheme(R.style.ToolbarTheme1);
 
-           // toolbarLayout.setContentScrimColor();
-            //toolbarLayout.getContentScrim().
+
         }
 
         @Override
@@ -372,25 +371,25 @@ private CollapsingToolbarLayout toolbarLayout;
     public void fillColorArrays(){
 
 
-        String[] colorStrings = { "004D40",
-                "00695C",
-                "00796B",
-                "00897B",
-                "009688",
-                "26A69A",
-                "4DB6AC",
-                "80CBC4",
-                "B2DFDB",
-                "1B5E20",
-                "2E7D32",
-                "388E3C",
-                "43A047",
-                "4CAF50",
-                "66BB6A",
-                "81C784",
-                "A5D6A7",
-                "C8E6C9",
-                "E8F5E9"};
+        String[] colorStrings = { "#004D40",
+                "#00695C",
+                "#00796B",
+                "#00897B",
+                "#009688",
+                "#26A69A",
+                "#4DB6AC",
+                "#80CBC4",
+                "#B2DFDB",
+                "#1B5E20",
+                "#2E7D32",
+                "#388E3C",
+                "#43A047",
+                "#4CAF50",
+                "#66BB6A",
+                "#81C784",
+                "#A5D6A7",
+                "#C8E6C9",
+                "#E8F5E9"};
        colorArray.addAll(Arrays.asList(colorStrings));
 
         statusColorArray.add("#000000");

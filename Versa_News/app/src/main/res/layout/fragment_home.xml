@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.adi.ho.jackie.versa_news.Fragments.HomeFragment"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:paddingTop="?attr/actionBarSize">
 
     <!-- TODO: Update blank fragment layout -->
 
