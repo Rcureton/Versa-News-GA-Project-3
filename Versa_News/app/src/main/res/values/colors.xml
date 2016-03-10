@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#b53f6c</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorPrimaryNews">#94a0df</color>
+    <color name="colorPrimaryNews">#e2e5f5</color>
     <color name="colorPrimaryDarkNews">#424e9b</color>
     <color name="colorAccentNews">#FF4081</color>
 </resources>

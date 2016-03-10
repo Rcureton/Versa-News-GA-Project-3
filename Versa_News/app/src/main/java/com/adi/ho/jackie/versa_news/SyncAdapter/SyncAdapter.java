@@ -1,29 +1,17 @@
 package com.adi.ho.jackie.versa_news.SyncAdapter;
 
 import android.accounts.Account;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SyncResult;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
-import com.adi.ho.jackie.versa_news.ContentProvider.ViceContentProvider;
-import com.adi.ho.jackie.versa_news.ContentProvider.ViceDBHelper;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
-import com.adi.ho.jackie.versa_news.MainActivity;
-import com.adi.ho.jackie.versa_news.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

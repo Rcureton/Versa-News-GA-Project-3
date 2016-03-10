@@ -17,7 +17,7 @@
     <ImageView
     android:id="@+id/individual_fragment_card_image"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="200dp"
     />
     <TextView
     android:id="@+id/individual_fragment_card_headline"

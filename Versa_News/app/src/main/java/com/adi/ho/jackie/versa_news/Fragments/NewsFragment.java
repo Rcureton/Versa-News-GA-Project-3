@@ -9,6 +9,8 @@ import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -48,8 +50,8 @@ public class NewsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-        newsRecycler = (RecyclerView) view.findViewById(R.id.news_recycle_list);
+        View view = inflater.inflate(R.layout.fragment_fashion, container, false);
+        newsRecycler = (RecyclerView) view.findViewById(R.id.fashion_recycle_list);
 
         new LoadNewsList().execute();
 
@@ -65,6 +67,12 @@ public class NewsFragment extends Fragment {
         newsRecycler.setLayoutManager(linearLayoutManager);
         newsRecycler.addItemDecoration(new VerticalSpaceItemDecoration(30));
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu,menu);
     }
 
     private class LoadNewsList extends AsyncTask<Void,Void,List<ViceItemsClass>> {
