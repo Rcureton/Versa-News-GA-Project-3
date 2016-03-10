@@ -23,13 +23,19 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name=".ArticleActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a68d091f7c4fa6f7b5343a62528659489f4edb53" />
 
-        <activity android:name=".TwitterActivity"></activity>
+        <!--<activity android:name=".TwitterActivity"></activity>-->
+
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
 
 
         <provider
@@ -43,12 +49,18 @@
             </intent-filter>
 
             <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id" />
+
+            <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <activity android:name=".Facebook.FacebookActivity"/>
+
         <activity android:name=".Youtube.PlayVideos" />
-        <activity android:name=".ArticleActivity"></activity>
+        <!--<activity android:name=".ArticleActivity"></activity>-->
 
     </application>
 
