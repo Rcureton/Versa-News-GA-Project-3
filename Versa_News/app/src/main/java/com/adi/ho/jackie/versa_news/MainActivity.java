@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             toolbar.setBackgroundColor(light.getRgb());
         }
         if (dark !=null ){
+            //TODO:Add support for lower versions if there is time
             window.setStatusBarColor(dark.getRgb());
         }
     }
