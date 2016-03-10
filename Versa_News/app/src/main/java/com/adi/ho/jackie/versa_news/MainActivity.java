@@ -3,9 +3,13 @@ package com.adi.ho.jackie.versa_news;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +42,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
@@ -53,8 +60,17 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getCanonicalName();
 
+    // These could be stored as string values instead.
+    private static final String AUTHORITY = "com.adi.ho.jackie.versa_news.ViceContentProvider";
+    private static final String ACCOUNT_TYPE = "example.com";
+    private static final String ACCOUNT = "default_account";
     public static final String ARTICLEID = "ID";
+
+    Account mAccount;
+    ContentResolver mResolver;
+    ProgressDialog mProgress;
 
     private int horizontalChilds;
     private int verticalChilds;
@@ -62,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public Toolbar toolbar;
     private InfiniteViewPager viewPager;
     private List<Fragment> fragmentList;
-    private List<ViceItemsClass> listViceArticles;
+    public List<ViceItemsClass> listViceArticles;
     private Bundle popularArticles;
     private ArrayList<String> urlArray;
     private ArrayList<String> headlineArray;
@@ -94,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         fillColorArrays();
+        mAccount = createSyncAccount(this);
+//        mProgress = new ProgressDialog(this);
+//        mProgress.setMessage("Loading...");
 
         // Vice API URLs that data can be received through
         String getMostPopularURL = getResources().getString(R.string.get_most_popular);
@@ -103,31 +122,21 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // Call async task that gets the API data and show that data in the view.
+//         Call async task that gets the API data and show that data in the view.
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getLatestURL);
 
       //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
+//        mResolver = getContentResolver();
+//        Bundle settingsBundle = new Bundle();
+//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//        mResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+//        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
 
-        /* Notifications
-         * Sent when the app syncs in the background and new articles are fetched.  */
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
-        // TODO: Replace setSmallIcon with our app icon.
-        builder.setSmallIcon(android.R.drawable.ic_dialog_info);
-        builder.setContentTitle("Vice Versa");
-        builder.setContentText("New articles are now available.");
-        Intent intent = new Intent(MainActivity.this,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,(int) System.currentTimeMillis(),intent,0);
-        builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
-
-        Notification notification= builder.build();
-        NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(NOTIFICATION_ID, notification);
-
+//        autoSyncData();
 
     }
 
@@ -164,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+//            mProgress.show();
         }
 
         @Override
@@ -180,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
             popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
             popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
             launchFragments();
+//            mProgress.hide();
 
         }
 
@@ -210,7 +220,35 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new TravelFragment());
 
     }
+/*
+    public void autoSyncData(){
+        // TODO: Add a settings option to disable automatic syncing.
+        // Periodically refresh latest stories
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                //21600); // Updates every 6 hours
+                5);
+        List<ViceItemsClass> result = new ArrayList<>();
+        listViceArticles = result;
+        loadingFinished = true;
+        for (int i = 0 ; i < 8; i++){
+            urlArray.add(listViceArticles.get(i).getImage());
+            headlineArray.add(listViceArticles.get(i).getTitle());
+            previewArray.add(listViceArticles.get(i).getPreview());
+            Log.d("AUTOSYNCDATA", listViceArticles.get(i).getTitle());
+        }
+        popularArticles.putStringArrayList("POPULARURL", urlArray);
+        popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
+        popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
+        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
+        launchFragments();
 
+
+    }
+*/
     @Override
     protected void onResume() {
         super.onResume();
@@ -316,5 +354,16 @@ public class MainActivity extends AppCompatActivity {
         statusColorArray.add("#ff00ff");
 
 
+    }
+
+    // For authenticating an account.
+    public static Account createSyncAccount(Context context){
+        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+
+//        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+//        } else {}
+
+        return newAccount;
     }
 }
