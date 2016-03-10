@@ -40,6 +40,7 @@ dependencies {
     compile 'com.github.kanytu:android-parallax-recyclerview:v1.6'
     compile 'com.github.antonyt:InfiniteViewPager:v1.0.0'
     compile 'com.google.code.gson:gson:2.6'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 
 
 }
