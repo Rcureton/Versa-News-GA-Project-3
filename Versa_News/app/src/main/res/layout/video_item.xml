@@ -32,5 +32,10 @@
         android:layout_below="@+id/video_title"
         android:textSize="15sp"
         />
+    <TextView
+        android:id="@+id/video_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </RelativeLayout>

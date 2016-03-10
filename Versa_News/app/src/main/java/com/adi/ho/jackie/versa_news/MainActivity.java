@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
 import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 
 
@@ -281,6 +282,7 @@ private CollapsingToolbarLayout toolbarLayout;
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
+        fragmentList.add(new VideoFragment());
 
     }
 
@@ -305,8 +307,7 @@ private CollapsingToolbarLayout toolbarLayout;
             }
         }));
 
-        viewPager.setPageTransformer(true, new DepthPageTransformer());
-       // viewPager.setCurrentItem(0);
+        viewPager.setPageTransformer(true, new DepthPageTransformer());// viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(onPageChangeListener);
     }
 
@@ -357,7 +358,7 @@ private CollapsingToolbarLayout toolbarLayout;
 //            colorStatusAnimation.setStartDelay(0);
 //            colorStatusAnimation.start();
 
-            MainActivity.this.setTheme(R.style.ToolbarTheme1);
+           // MainActivity.this.setTheme(R.style.ToolbarTheme1);
 
 
         }
