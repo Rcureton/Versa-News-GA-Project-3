@@ -124,11 +124,11 @@ public class MainActivity extends AppCompatActivity {
 
 //         Call async task that gets the API data and show that data in the view.
         GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
-        // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         getDataAsyncTask.execute(getLatestURL);
 
       //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
+        /* For calling the sync adapter to refresh manually -- currently crashes the app. */
 //        mResolver = getContentResolver();
 //        Bundle settingsBundle = new Bundle();
 //        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -178,6 +178,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> result) {
+            /* Notifications */
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+            // TODO: Replace setSmallIcon with our app icon.
+            builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+            builder.setContentTitle("Vice Versa");
+            builder.setContentText("New articles are now available.");
+
+            Intent intent= new Intent(MainActivity.this,MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
+            builder.setContentIntent(pendingIntent);
+            builder.setAutoCancel(true);
+
+            Notification notification= builder.build();
+            NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            manager.notify(NOTIFICATION_ID, notification);
+
             listViceArticles = result;
             loadingFinished = true;
             for (int i = 0 ; i < 8; i++){
@@ -189,8 +205,6 @@ public class MainActivity extends AppCompatActivity {
             popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
             popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
             launchFragments();
-//            mProgress.hide();
-
         }
 
         public String getInputData(InputStream stream) throws IOException {
@@ -220,7 +234,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new TravelFragment());
 
     }
-/*
+
+    /* Call this method to enable periodic refresh of articles. Currently logs live data,
+    * but does not connect to the home screen view without crashing.
+    */
+
     public void autoSyncData(){
         // TODO: Add a settings option to disable automatic syncing.
         // Periodically refresh latest stories
@@ -229,26 +247,28 @@ public class MainActivity extends AppCompatActivity {
                 mAccount,
                 AUTHORITY,
                 Bundle.EMPTY,
-                //21600); // Updates every 6 hours
-                5);
-        List<ViceItemsClass> result = new ArrayList<>();
+                //21600); // To update every 6 hours
+                10);
+
+        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
+       List<ViceItemsClass> result = new ArrayList<>();
         listViceArticles = result;
         loadingFinished = true;
+
         for (int i = 0 ; i < 8; i++){
             urlArray.add(listViceArticles.get(i).getImage());
             headlineArray.add(listViceArticles.get(i).getTitle());
             previewArray.add(listViceArticles.get(i).getPreview());
-            Log.d("AUTOSYNCDATA", listViceArticles.get(i).getTitle());
+            Log.d("AUTOSYNCDATA_FOR", headlineArray.get(i));
         }
         popularArticles.putStringArrayList("POPULARURL", urlArray);
         popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
         popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
-        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
         launchFragments();
+        Log.d("AUTOSYNCDATA_LAUNCH", "Sync complete.");
+        }
 
 
-    }
-*/
     @Override
     protected void onResume() {
         super.onResume();
