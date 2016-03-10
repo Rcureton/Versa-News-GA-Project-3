@@ -44,3 +44,4 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6'
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
 }
+
