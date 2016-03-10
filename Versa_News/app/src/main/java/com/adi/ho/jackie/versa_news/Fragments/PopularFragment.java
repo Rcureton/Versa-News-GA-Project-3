@@ -1,23 +1,33 @@
 package com.adi.ho.jackie.versa_news.Fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.graphics.Palette;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.adi.ho.jackie.versa_news.ArticleActivity;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
+import com.adi.ho.jackie.versa_news.MainActivity;
 import com.adi.ho.jackie.versa_news.R;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,17 +43,40 @@ import java.util.List;
  */
 public class PopularFragment extends Fragment {
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
+    public ChangeToolbarColor colorListener;
+
+    public static interface ChangeToolbarColor{
+        public void changeColor(Palette.Swatch light, Palette.Swatch dark);
+    }
+
+    private static final int SWIPE_MIN_DISTANCE = 160;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
     public ImageView popularImage;
+    public TextView popularHeadline;
+    public TextView popularPreview;
+    public TextView popularId;
+
     private ArrayList<ViceItemsClass> popularList;
     int listPosition = 0;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            colorListener = (ChangeToolbarColor)activity;
+        } catch (ClassCastException e){
+            e.printStackTrace();
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular, container, false);
         popularImage = (ImageView) view.findViewById(R.id.popular_fragment_image);
+        popularHeadline = (TextView)view.findViewById(R.id.popular_fragment_headline);
+        popularPreview = (TextView)view.findViewById(R.id.popular_fragment_preview);
+        popularId = (TextView)view.findViewById(R.id.popular_fragment_id);
 
         DownloadPopularArticlesAsyncTask downloadATask = new DownloadPopularArticlesAsyncTask();
         String popularUrl = getString(R.string.get_most_popular);
@@ -55,7 +88,34 @@ public class PopularFragment extends Fragment {
             @Override
             public boolean onTouch(final View view, final MotionEvent event) {
                 gdt.onTouchEvent(event);
-                Picasso.with(getContext()).load(popularList.get(listPosition).getImage()).fit().into(popularImage);
+                Picasso.with(getContext()).load(popularList.get(listPosition).getImage()).into(popularImage);
+                popularHeadline.setText(popularList.get(listPosition).getTitle());
+                popularPreview.setText(popularList.get(listPosition).getPreview());
+                popularId.setText(popularList.get(listPosition).getId());
+
+                Picasso.with(getContext()).load(popularList.get(listPosition).getImage()).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+
+                        Palette palette = Palette.from(bitmap).generate();
+
+                        Palette.Swatch mutedLightSwatch = palette.getLightMutedSwatch();
+                        Palette.Swatch mutedDarkSwatch = palette.getDarkMutedSwatch();
+
+                        colorListener.changeColor(mutedLightSwatch, mutedDarkSwatch);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable drawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable drawable) {
+
+                    }
+                });
+
                 return true;
             }
         });
@@ -67,6 +127,8 @@ public class PopularFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //Picasso.with(getContext()).load(popularList.get(0).getImage()).fit().into(popularImage);
+        popularHeadline.setOnClickListener(clickListener);
+        popularPreview.setOnClickListener(clickListener);
 
 
     }
@@ -145,7 +207,16 @@ public class PopularFragment extends Fragment {
         viceItemsClasses.size();
             popularList=viceItemsClasses;
 
-
         }
+
     }
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String id = popularId.getText().toString();
+            Intent intent = new Intent(getActivity(), ArticleActivity.class);
+            intent.putExtra(MainActivity.ARTICLEID,id);
+            startActivity(intent);
+        }
+    };
 }
