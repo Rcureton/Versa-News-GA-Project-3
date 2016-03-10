@@ -108,15 +108,18 @@ public class ArticleActivity extends AppCompatActivity {
 
     }
 
-    public void getViceUrl(String url){
+    public void getViceUrl(String title,String description ,String url){
 
         shareDialog= new ShareDialog(this);
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             String urlContent = url;
+            String articleTitle= title;
+            String articleDescription= description;
+
+
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle("Hello Vice")
-                    .setContentDescription(
-                            "Sharing Vice Article")
+                    .setContentTitle(title)
+                    .setContentDescription(description)
                     .setContentUrl(Uri.parse(urlContent))
                     .build();
 
@@ -179,6 +182,7 @@ public class ArticleActivity extends AppCompatActivity {
             String category = viceArticle.getCategory();
             String urlImage = viceArticle.getImage();
             String url= viceArticle.getUrl();
+            String description= viceArticle.getPreview();
             final String article = "<style>img{display: inline; height: auto; max-width: 100%;}</style>"+body;
             articleTitle.setText(title);
             articleDate.setText(date);
@@ -191,7 +195,7 @@ public class ArticleActivity extends AppCompatActivity {
             });
             articleCategory.setText(category);
             Picasso.with(ArticleActivity.this).load(urlImage).fit().into(articleImage);
-            getViceUrl(url);
+            getViceUrl(title,description,url);
 
         }
 
