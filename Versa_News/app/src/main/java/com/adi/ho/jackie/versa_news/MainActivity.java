@@ -3,12 +3,20 @@ package com.adi.ho.jackie.versa_news;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.adi.ho.jackie.versa_news.Fragments.MusicFragment;
 import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 
 
@@ -80,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
     private int horizontalChilds;
     private int verticalChilds;
     private TabLayout tabLayout;
-
-    public Toolbar toolbar;
     private InfiniteViewPager viewPager;
     private List<Fragment> fragmentList;
     private List<ViceItemsClass> listViceArticles;
@@ -95,13 +101,31 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> statusColorArray;
 
 
+    DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private String mActivityTitle;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        NavigationView nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
+        View headerLayout = nvDrawer.inflateHeaderView(R.layout.nav_header);
+        mActivityTitle = getTitle().toString();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
 
         setContentView(R.layout.tab_layout);
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -109,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
+
+
+
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -135,6 +162,113 @@ public class MainActivity extends AppCompatActivity {
       //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
 
+    }
+    private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle("Navigation!");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mActivityTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+        };
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the planet to show based on
+        // position
+        Fragment fragment = null;
+
+        Class fragmentClass;
+        switch(menuItem.getItemId()) {
+            case R.id.home_drawer_fragment:
+                fragmentClass = HomeFragment.class;
+                break;
+            case R.id.news_drawer_fragment:
+                fragmentClass = NewsFragment.class;
+                break;
+            case R.id.sports_drawer_fragment:
+                fragmentClass = SportsFragment.class;
+                break;
+            case R.id.music_drawer_fragment:
+                fragmentClass= MusicFragment.class;
+                break;
+            case R.id.fashion_drawer_fragment:
+                fragmentClass= FashionFragment.class;
+                break;
+            case R.id.food_drawer_fragment:
+                fragmentClass= FoodFragment.class;
+                break;
+            case R.id.tech_drawer_fragment:
+                fragmentClass= TechFragment.class;
+                break;
+            case R.id.travel_drawer_fragment:
+                fragmentClass= TravelFragment.class;
+                break;
+
+            default:
+                fragmentClass = HomeFragment.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        // Highlight the selected item has been done by NavigationView
+        // menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        drawerLayout.closeDrawers();
+    }
+
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
     }
 
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
