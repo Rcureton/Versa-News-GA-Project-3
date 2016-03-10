@@ -1,18 +1,31 @@
 package com.adi.ho.jackie.versa_news;
 
 
-import com.ToxicBakery.viewpager.transforms.AccordionTransformer;
-import com.ToxicBakery.viewpager.transforms.BackgroundToForegroundTransformer;
-import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
-import com.ToxicBakery.viewpager.transforms.StackTransformer;
-
-
-
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,39 +36,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-
-import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
-
-
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
-import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
-import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
-
-
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 import com.adi.ho.jackie.versa_news.Fragments.FoodFragment;
 import com.adi.ho.jackie.versa_news.Fragments.HomeFragment;
@@ -63,31 +44,11 @@ import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
-import com.adi.ho.jackie.versa_news.ViewPagerAdapter.FragmentAdapter;
-import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
-import com.antonyt.infiniteviewpager.InfiniteViewPager;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
+import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
+import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -98,13 +59,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
-
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-
 
 public class MainActivity extends AppCompatActivity {
     private String[] mNavigationDrawerItemTitles;
@@ -115,16 +72,24 @@ public class MainActivity extends AppCompatActivity {
     Button mChangeActivityButton;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
 
+    // These could be stored as string values instead.
+    private static final String AUTHORITY = "com.adi.ho.jackie.versa_news.ViceContentProvider";
+    private static final String ACCOUNT_TYPE = "example.com";
+    private static final String ACCOUNT = "default_account";
     public static final String ARTICLEID = "ID";
+    public static int NOTIFICATION_ID = 1;
+    NotificationCompat.Builder builder;
+    Account mAccount;
+    ContentResolver mResolver;
+    ProgressDialog mProgress;
 
     private int horizontalChilds;
     private int verticalChilds;
     private TabLayout tabLayout;
-
     public Toolbar toolbar;
     private InfiniteViewPager viewPager;
     private List<Fragment> fragmentList;
-    private List<ViceItemsClass> listViceArticles;
+    public List<ViceItemsClass> listViceArticles;
     private Bundle popularArticles;
     private ArrayList<String> urlArray;
     private ArrayList<String> headlineArray;
@@ -133,13 +98,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean loadingFinished = false;
     private ArrayList<String> colorArray;
     private ArrayList<String> statusColorArray;
+
     private HomeFragment homeFragment;
-private CollapsingToolbarLayout toolbarLayout;
+    private CollapsingToolbarLayout toolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         setContentView(R.layout.tab_layout);
@@ -160,6 +125,9 @@ private CollapsingToolbarLayout toolbarLayout;
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
         fillColorArrays();
+        mAccount = createSyncAccount(this);
+//        mProgress = new ProgressDialog(this);
+//        mProgress.setMessage("Loading...");
 
      //   appBarLayout.setBackgroundColor(Color.parseColor(colorArray.get(3)));
         // Vice API URLs that data can be received through
@@ -173,13 +141,20 @@ private CollapsingToolbarLayout toolbarLayout;
         // Call async task that gets the API data and show that data in the view.
         DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
         downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
-       // GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
-        // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
-        //getDataAsyncTask.execute(getLatestURL);
 
         //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
         ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
+
+        /* For calling the sync adapter to refresh manually -- currently crashes the app. */
+//        mResolver = getContentResolver();
+//        Bundle settingsBundle = new Bundle();
+//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//        mResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+//        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
+
+//        autoSyncData();
 
 //        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
 //        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
@@ -194,8 +169,8 @@ private CollapsingToolbarLayout toolbarLayout;
         // mDrawerList.setAdapter(adapter);
 
 
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mTitle = mDrawerTitle = getTitle();
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//        mTitle = mDrawerTitle = getTitle();
 
 //        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
@@ -220,14 +195,13 @@ private CollapsingToolbarLayout toolbarLayout;
 //            }
 //        };
 
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
+//            mDrawerLayout.setDrawerListener(mDrawerToggle);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
         }
     }
-
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
         @Override
         protected List<ViceItemsClass> doInBackground(String... myURL) {
@@ -260,11 +234,27 @@ private CollapsingToolbarLayout toolbarLayout;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+//            mProgress.show();
         }
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> result) {
+            /* Notifications */
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+            // TODO: Replace setSmallIcon with our app icon.
+            builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+            builder.setContentTitle("Vice Versa");
+            builder.setContentText("New articles are now available.");
+
+            Intent intent= new Intent(MainActivity.this,MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
+            builder.setContentIntent(pendingIntent);
+            builder.setAutoCancel(true);
+
+            Notification notification= builder.build();
+            NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            manager.notify(NOTIFICATION_ID, notification);
+
             listViceArticles = result;
             loadingFinished = true;
             for (int i = 0 ; i < 8; i++){
@@ -276,6 +266,7 @@ private CollapsingToolbarLayout toolbarLayout;
             popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
             popularArticles.putStringArrayList("POPULARID", idArray);
             launchFragments();
+
             setImagesHomeFragment(urlArray,headlineArray,idArray);
             //Set images from home fragment
 
@@ -355,8 +346,49 @@ private CollapsingToolbarLayout toolbarLayout;
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
-        fragmentList.add(new VideoFragment());
 
+    }
+
+    /* Call this method to enable periodic refresh of articles. Currently logs live data,
+    * but does not connect to the home screen view without crashing.
+    */
+
+ /*   public void autoSyncData(){
+        // TODO: Add a settings option to disable automatic syncing.
+        // Periodically refresh latest stories
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                //21600); // To update every 6 hours
+                10);
+
+        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
+       List<ViceItemsClass> result = new ArrayList<>();
+        listViceArticles = result;
+        loadingFinished = true;
+
+        for (int i = 0 ; i < 8; i++){
+            urlArray.add(listViceArticles.get(i).getImage());
+            headlineArray.add(listViceArticles.get(i).getTitle());
+            previewArray.add(listViceArticles.get(i).getPreview());
+            Log.d("AUTOSYNCDATA_FOR", headlineArray.get(i));
+        }
+        popularArticles.putStringArrayList("POPULARURL", urlArray);
+        popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
+        popularArticles.putStringArrayList("POPULARPREVIEW", previewArray);
+        launchFragments();
+        Log.d("AUTOSYNCDATA_LAUNCH", "Sync complete.");
+        }
+*/
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Clear notification when app is opened.
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     private void launchFragments(){
@@ -478,6 +510,16 @@ private CollapsingToolbarLayout toolbarLayout;
 
     }
 
+    // For authenticating an account.
+    public static Account createSyncAccount(Context context){
+        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+//        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+//        } else {}
+
+        return newAccount;
+    }
+
     public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray){
         Picasso.with(MainActivity.this).load(imageUrls.get(0)).fit().into(homeFragment.popularImage1);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(1)).fit().into(homeFragment.popularImage2);
@@ -553,12 +595,8 @@ private CollapsingToolbarLayout toolbarLayout;
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-
-
-
-
-}
+//        mDrawerToggle.syncState();
     }
+}
 
 
