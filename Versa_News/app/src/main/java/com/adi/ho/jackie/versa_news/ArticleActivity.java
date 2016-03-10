@@ -1,40 +1,19 @@
 package com.adi.ho.jackie.versa_news;
 
 
-import android.app.FragmentManager;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-
-import com.squareup.picasso.Picasso;
-
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceArticleClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
-import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
-import com.adi.ho.jackie.versa_news.RecyclerViewStuff.ArticleRecyclerAdapter;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -55,7 +34,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 public class ArticleActivity extends AppCompatActivity {
 
@@ -92,8 +70,6 @@ public class ArticleActivity extends AppCompatActivity {
         articleBody = (WebView) findViewById(R.id.articleText);
         articleCategory = (TextView) findViewById(R.id.articleCategory);
         articleTitle = (TextView) findViewById(R.id.titleView);
-
-        //  articleBody.getSettings().setLoadWithOverviewMode(true);
 
         AccessToken accessToken= new AccessToken(getString(R.string.accessToken),
                 getString(R.string.facebook_app_id),getString(R.string.facebook_app_secret),null,null,null,null,null);
@@ -170,6 +146,7 @@ public class ArticleActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
 
             }
+
         });
     }
     @Override
