@@ -44,7 +44,6 @@ import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
-import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
@@ -170,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
         // mDrawerList.setAdapter(adapter);
 
 
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mTitle = mDrawerTitle = getTitle();
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//        mTitle = mDrawerTitle = getTitle();
 
 //        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
@@ -196,14 +195,13 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        };
 
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
+//            mDrawerLayout.setDrawerListener(mDrawerToggle);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
         }
     }
-
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
         @Override
         protected List<ViceItemsClass> doInBackground(String... myURL) {
@@ -348,7 +346,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
-        fragmentList.add(new VideoFragment());
 
     }
 
@@ -598,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+//        mDrawerToggle.syncState();
     }
 }
 
