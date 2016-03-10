@@ -151,10 +151,6 @@ private CollapsingToolbarLayout toolbarLayout;
         //appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
         //toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-
-
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
         headlineArray = new ArrayList<>();
