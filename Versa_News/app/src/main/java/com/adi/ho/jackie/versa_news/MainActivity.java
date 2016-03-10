@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
 import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
 import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 
@@ -135,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> statusColorArray;
     private HomeFragment homeFragment;
 private CollapsingToolbarLayout toolbarLayout;
+    private PopularFragment popularFragment;
+    Bundle popularBundle;
+    private String popularImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +163,8 @@ private CollapsingToolbarLayout toolbarLayout;
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
+
+
         fillColorArrays();
 
      //   appBarLayout.setBackgroundColor(Color.parseColor(colorArray.get(3)));
@@ -177,55 +183,9 @@ private CollapsingToolbarLayout toolbarLayout;
         // TODO: Pass in the URL wanted, or create a variable that is updated based on the selected section.
         //getDataAsyncTask.execute(getLatestURL);
 
-        //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
-
-        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
-
-//        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
-//        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
-//        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_today, "Loaded");
 
 
-//        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        //  mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-//        mDrawerList = (ListView)findViewById(R.id.left_drawer);
 
-        // DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
-        // mDrawerList.setAdapter(adapter);
-
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mTitle = mDrawerTitle = getTitle();
-
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
-//                this,
-//                mDrawerLayout,
-//                toolbar,
-//                R.string.drawer_open,
-//                R.string.drawer_close
-//        )
-        {
-
-            /** Called when a drawer has settled in a completely closed state. */
-//            public void onDrawerClosed(View view) {
-//                super.onDrawerClosed(view);
-//                getSupportActionBar().setTitle(mTitle);
-//            }
-//
-//            /** Called when a drawer has settled in a completely open state. */
-//            public void onDrawerOpened(View drawerView) {
-//                super.onDrawerOpened(drawerView);
-//                getSupportActionBar().setTitle(mDrawerTitle);
-//            }
-//        };
-
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-
-        }
     }
 
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
@@ -276,6 +236,7 @@ private CollapsingToolbarLayout toolbarLayout;
             popularArticles.putStringArrayList("POPULARHEADLINE", headlineArray);
             popularArticles.putStringArrayList("POPULARID", idArray);
             launchFragments();
+
             setImagesHomeFragment(urlArray,headlineArray,idArray);
             //Set images from home fragment
 
@@ -339,6 +300,11 @@ private CollapsingToolbarLayout toolbarLayout;
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> viceItemsClasses) {
+          //  popularBundle = new Bundle();
+            popularFragment= new PopularFragment();
+
+
+            popularImageUrl = viceItemsClasses.get(0).getImage();
             String getLatestURL = getResources().getString(R.string.get_latest);
             GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
             getDataAsyncTask.execute(getLatestURL);
@@ -348,14 +314,17 @@ private CollapsingToolbarLayout toolbarLayout;
 
     private void fillFragmentList(){
         fragmentList = new ArrayList<>();
+
         fragmentList.add(homeFragment);
         fragmentList.add(new NewsFragment());
+
         fragmentList.add(new FashionFragment());
         fragmentList.add(new TechFragment());
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
-        fragmentList.add(new VideoFragment());
+        fragmentList.add(popularFragment);
+
 
     }
 
@@ -392,6 +361,10 @@ private CollapsingToolbarLayout toolbarLayout;
 
         @Override
         public void onPageSelected(int position) {
+            if (popularFragment != null && (popularFragment.popularImage.getDrawable() == null || popularFragment.popularImage.getVisibility() == View.INVISIBLE)){
+                Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
+            }
+
             //Color Animation
             Random rand = new Random();
             position = rand.nextInt(19);
@@ -553,8 +526,7 @@ private CollapsingToolbarLayout toolbarLayout;
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-
+        //mDrawerToggle.syncState();
 
 
 
