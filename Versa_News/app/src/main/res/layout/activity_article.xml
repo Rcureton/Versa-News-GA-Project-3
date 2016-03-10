@@ -75,6 +75,16 @@
                 android:paddingRight="3dp"
                 android:textSize="15sp"
                 android:textColor="#ffffff" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/twitterImageButton"
+                android:src="@drawable/ic_action_twitter"
+                android:background="#00ffffff"
+                android:layout_alignTop="@+id/dateTextView"
+                android:layout_toRightOf="@+id/dateTextView"
+                android:layout_toEndOf="@+id/dateTextView" />
             <!--<ImageButton-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->

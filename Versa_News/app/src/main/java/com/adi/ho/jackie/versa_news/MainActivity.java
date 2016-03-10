@@ -36,7 +36,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
+//import com.adi.ho.jackie.versa_news.Fragments.VideoFragment;
 import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 
 
@@ -68,6 +68,9 @@ import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -107,6 +110,11 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "h8Rnv9R1AdZlL4s1joefXvY3i";
+    private static final String TWITTER_SECRET = "NB0PEP1A7uPk8cxgWZzClz8AQthBSi9UbzE3sfDO0voBWqIiPT";
+
     private String[] mNavigationDrawerItemTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -139,6 +147,8 @@ private CollapsingToolbarLayout toolbarLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
 
         setContentView(R.layout.activity_main);
 
@@ -193,9 +203,9 @@ private CollapsingToolbarLayout toolbarLayout;
         // DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
         // mDrawerList.setAdapter(adapter);
 
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mTitle = mDrawerTitle = getTitle();
+//
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//        mTitle = mDrawerTitle = getTitle();
 
 //        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
@@ -220,10 +230,10 @@ private CollapsingToolbarLayout toolbarLayout;
 //            }
 //        };
 
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
+//            mDrawerLayout.setDrawerListener(mDrawerToggle);
+//
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setHomeButtonEnabled(true);
 
         }
     }
@@ -355,7 +365,7 @@ private CollapsingToolbarLayout toolbarLayout;
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
-        fragmentList.add(new VideoFragment());
+//        fragmentList.add(new VideoFragment());
 
     }
 
@@ -490,75 +500,74 @@ private CollapsingToolbarLayout toolbarLayout;
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-        private android.support.v4.app.FragmentManager fragmentManager;
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-
-    }
-
-    private void selectItem(int position) {
-
-        Fragment fragment = null;
-
-        switch (position) {
-            case 0:
-             //   fragment = new CreateFragment();
-                break;
-            case 1:
-               // fragment = new ReadFragment();
-                break;
-            case 2:
-                //fragment = new ReadTop();
-                break;
-
-            default:
-                break;
-        }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-           // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(mNavigationDrawerItemTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-
-        } else {
-            Log.e("MainActivity", "Error in creating fragment");
-        }
-    }
-
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        if (mDrawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+//
+//        private android.support.v4.app.FragmentManager fragmentManager;
+//
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            selectItem(position);
+//        }
+//
+//    }
+//
+//    private void selectItem(int position) {
+//
+//        Fragment fragment = null;
+//
+//        switch (position) {
+//            case 0:
+//             //   fragment = new CreateFragment();
+//                break;
+//            case 1:
+//               // fragment = new ReadFragment();
+//                break;
+//            case 2:
+//                //fragment = new ReadTop();
+//                break;
+//
+//            default:
+//                break;
+//        }
+//
+//        if (fragment != null) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//           // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+//
+//            mDrawerList.setItemChecked(position, true);
+//            mDrawerList.setSelection(position);
+//            setTitle(mNavigationDrawerItemTitles[position]);
+//            mDrawerLayout.closeDrawer(mDrawerList);
+//
+//        } else {
+//            Log.e("MainActivity", "Error in creating fragment");
+//        }
+//    }
+//
+//
+//    @Override
+//    public void setTitle(CharSequence title) {
+//        mTitle = title;
+//        getSupportActionBar().setTitle(mTitle);
+//    }
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        mDrawerToggle.syncState();
+//
 
 
 
 }
-    }
 
 

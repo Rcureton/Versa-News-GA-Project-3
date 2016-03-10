@@ -29,9 +29,6 @@
             android:name="io.fabric.ApiKey"
             android:value="a68d091f7c4fa6f7b5343a62528659489f4edb53" />
 
-        <activity android:name=".TwitterActivity"></activity>
-
-
         <provider
             android:name=".ContentProvider.ViceContentProvider"
             android:authorities="com.adi.ho.jackie.versa_news.ViceContentProvider"
@@ -48,7 +45,6 @@
         </service>
 
         <activity android:name=".Youtube.PlayVideos" />
-        <activity android:name=".ArticleActivity"></activity>
 
     </application>
 
