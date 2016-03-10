@@ -32,7 +32,7 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{537549889739253}"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider537549889739253"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
 
