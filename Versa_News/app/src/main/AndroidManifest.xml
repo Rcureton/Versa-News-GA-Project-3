@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{537549889739253}"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider537549889739253"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
 
@@ -35,18 +35,25 @@
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
 
-            <meta-data
-                android:name="com.facebook.sdk.ApplicationId"
-                android:value="@string/facebook_app_id" />
 
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity android:name=".Facebook.FacebookActivity"/>
 
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
         <activity android:name=".Youtube.PlayVideos" />
+
         <activity android:name=".ArticleActivity"></activity>
     </application>
 
