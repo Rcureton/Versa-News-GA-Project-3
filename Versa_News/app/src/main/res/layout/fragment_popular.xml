@@ -8,9 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="20dp"
         android:textColor="#000000"
         android:textStyle="bold"
         />
@@ -18,7 +17,8 @@
         android:id="@+id/popular_fragment_image"
         android:layout_width="550dp"
         android:layout_height="350dp"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/popular_fragment_headline"
+
         />
     <TextView
         android:id="@+id/popular_fragment_preview"
@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/popular_fragment_image"
-        android:textSize="25sp"
+        android:textSize="16sp"
         android:textColor="#000000"
         />
         <TextView
