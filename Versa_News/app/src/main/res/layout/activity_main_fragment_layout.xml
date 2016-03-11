@@ -18,8 +18,8 @@
     <ImageView
     android:id="@+id/individual_fragment_card_image"
     android:layout_width="550dp"
-    android:layout_height="200dp"
-    android:scaleType="centerCrop"
+    android:layout_height="275dp"
+    android:scaleType="center"
     />
     <TextView
     android:id="@+id/individual_fragment_card_headline"
