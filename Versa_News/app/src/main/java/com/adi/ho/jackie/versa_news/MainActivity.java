@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
-        statusbar = (View)findViewById(R.id.statusBarBackground);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -208,69 +207,9 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
         downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
 
-
-        //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
-
-        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
-
-        /* For calling the sync adapter to refresh manually -- currently crashes the app. */
-//        mResolver = getContentResolver();
-//        Bundle settingsBundle = new Bundle();
-//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-//        mResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-//        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
-
-//        autoSyncData();
-
-//        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
-//        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
-//        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_today, "Loaded");
-
-
-//        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        //  mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-//        mDrawerList = (ListView)findViewById(R.id.left_drawer);
-
-        // DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
-        // mDrawerList.setAdapter(adapter);
-
-
-//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-//        mTitle = mDrawerTitle = getTitle();
-
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
-//                this,
-//                mDrawerLayout,
-//                toolbar,
-//                R.string.drawer_open,
-//                R.string.drawer_close
-//        )
-        {
-
-            /** Called when a drawer has settled in a completely closed state. */
-//            public void onDrawerClosed(View view) {
-//                super.onDrawerClosed(view);
-//                getSupportActionBar().setTitle(mTitle);
-//            }
-//
-//            /** Called when a drawer has settled in a completely open state. */
-//            public void onDrawerOpened(View drawerView) {
-//                super.onDrawerOpened(drawerView);
-//                getSupportActionBar().setTitle(mDrawerTitle);
-//            }
-//        };
-
-//            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-
-        }
     }
 
-    }
+
     /* Change toolbarcolor
      *
      */
@@ -441,6 +380,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
+        fragmentList.add(popularFragment);
 
 
     }
@@ -522,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
         @Override
         public void onPageSelected(int position) {
-            if (popularFragment != null && (popularFragment.popularImage.getDrawable() == null || popularFragment.popularImage.getVisibility() == View.INVISIBLE)) {
+            if (popularFragment != null) {
                 Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
             }
 
