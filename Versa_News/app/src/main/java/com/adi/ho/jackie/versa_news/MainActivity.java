@@ -176,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
     private PopularFragment popularFragment;
     private String popularImageUrl;
+    private String popularHeadline;
+    private String popularPreview;
     private Window window;
     private Drawer mDrawer;
     private EditText mSearchEditText;
@@ -190,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        mSearchEditText = (EditText)findViewById(R.id.search);
-        mSearchButton = (ImageView)findViewById(R.id.search__button_enter);
+        mSearchEditText = (EditText) findViewById(R.id.search);
+        mSearchButton = (ImageView) findViewById(R.id.search__button_enter);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -233,14 +235,15 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.i("DRAWER","clicked on position: "+position);
+                        Log.i("DRAWER", "clicked on position: " + position);
                         if (position >= 4 && position <= 12) {
-                            viewPager.setCurrentItem(position-4, true);
-                            Log.i("DRAWER","clicked on position: "+position);
+                            viewPager.setCurrentItem(position - 4, true);
+                            Log.i("DRAWER", "clicked on position: " + position);
+                            mDrawer.closeDrawer();
                             return true;
 
                         }
-                        if (position == -1){
+                        if (position == -1) {
                             Intent youtubeIntent = new Intent(MainActivity.this, PlayVideos.class);
                             startActivity(youtubeIntent);
                             return true;
@@ -287,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                             bundle.putString("QUERY", mSearchEditText.getText().toString());
                             searchFragment.setArguments(bundle);
                             FragmentManager fragmentManager = getSupportFragmentManager();
-                            searchFragment.show(getFragmentManager(),"SEARCH");
+                            searchFragment.show(getFragmentManager(), "SEARCH");
                         }
                     });
                 }
@@ -480,6 +483,9 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
 
             popularImageUrl = viceItemsClasses.get(0).getImage();
+            popularHeadline = viceItemsClasses.get(0).getTitle();
+            popularPreview = viceItemsClasses.get(0).getPreview();
+
             String getLatestURL = getResources().getString(R.string.get_latest);
             GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
             getDataAsyncTask.execute(getLatestURL);
@@ -579,9 +585,11 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
         @Override
         public void onPageSelected(int position) {
-            mDrawer.setSelectionAtPosition(position+4,false);
+            mDrawer.setSelectionAtPosition(position + 4, false);
             if (popularFragment != null && popularFragment.popularImage != null) {
                 Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
+                popularFragment.popularHeadline.setText(popularHeadline);
+                popularFragment.popularPreview.setText(popularPreview);
             }
 
             // Update title
@@ -597,14 +605,14 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             fragmentTitleList.add("Travel"); // 7
             fragmentTitleList.add("Most Popular"); // 8
 
-            setTitle( String.valueOf(fragmentTitleList.get(position)) );
+            setTitle(String.valueOf(fragmentTitleList.get(position)));
 
             //Color Animation
             ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
 
             Integer colorFrom = toolbarColor.getColor();
             Integer colorTo = Color.parseColor(colorArray.get(position));
-             Integer colorStatusFrom = window.getStatusBarColor();
+            Integer colorStatusFrom = window.getStatusBarColor();
             Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
@@ -619,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    window.setStatusBarColor((Integer)animation.getAnimatedValue());
+                    window.setStatusBarColor((Integer) animation.getAnimatedValue());
                 }
             });
 
@@ -629,7 +637,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             colorStatusAnimation.setDuration(1300);
             colorStatusAnimation.setStartDelay(0);
             colorStatusAnimation.start();
-
 
 
         }
@@ -644,25 +651,25 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
 
         String[] colorStrings = {"#FFC107",
-                "#FF6E40",
+                "#A1887F",
                 "#FFE0B2",
                 "#DCE775",
                 "#C5E1A5",
-                "#A7FFEB",
+                "#78909C",
                 "#8C9EFF",
                 "#FF8A80",
                 "#BBDEFB",
         };
         colorArray.addAll(Arrays.asList(colorStrings));
-        statusColorArray.add("#64FFDA");
-        statusColorArray.add("#0277BD");
-        statusColorArray.add("#00E5FF");
-        statusColorArray.add("#FF3D00");
-        statusColorArray.add("#6D4C41");
-        statusColorArray.add("#FFCC80");
-        statusColorArray.add("#2196F3");
-        statusColorArray.add("#607D8B");
-        statusColorArray.add("#212121");
+        statusColorArray.add("#FF8F00");
+        statusColorArray.add("#5D4037");
+        statusColorArray.add("#FFB74D");
+        statusColorArray.add("#C0CA33");
+        statusColorArray.add("#7CB342");
+        statusColorArray.add("#455A64");
+        statusColorArray.add("#536DFE");
+        statusColorArray.add("#FF5252");
+        statusColorArray.add("#42A5F5");
     }
 
 
