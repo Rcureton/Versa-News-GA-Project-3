@@ -21,35 +21,91 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+
+
+import android.os.Build;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
+
+
+import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
+
+
+import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.CollapsingToolbarLayout;
+
+import com.adi.ho.jackie.versa_news.Fragments.MusicFragment;
+import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
+
+
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+
 import com.adi.ho.jackie.versa_news.Fragments.FoodFragment;
 import com.adi.ho.jackie.versa_news.Fragments.HomeFragment;
 import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
+
+import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
+import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
+import com.antonyt.infiniteviewpager.InfiniteViewPager;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+
+
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import com.google.gson.Gson;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.BadgeStyle;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -58,12 +114,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+
+import java.util.Random;
+
+
+public class MainActivity extends AppCompatActivity implements PopularFragment.ChangeToolbarColor {
+
     private String[] mNavigationDrawerItemTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -87,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     private int verticalChilds;
     private TabLayout tabLayout;
     public Toolbar toolbar;
-    private InfiniteViewPager viewPager;
+    private ViewPager viewPager;
     private List<Fragment> fragmentList;
     public List<ViceItemsClass> listViceArticles;
     private Bundle popularArticles;
@@ -102,19 +164,20 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private CollapsingToolbarLayout toolbarLayout;
 
+    private PopularFragment popularFragment;
+    private String popularImageUrl;
+    private Window window;
+    private Drawer mDrawer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         setContentView(R.layout.tab_layout);
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
-
-        //tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
-        //toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -124,12 +187,81 @@ public class MainActivity extends AppCompatActivity {
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
+        new DrawerBuilder().withActivity(this).build();
+        // PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_home);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.drawer_sections).withSelectable(false);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.latest);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.news);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.fashion);
+        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.tech);
+        SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName(R.string.music);
+        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withName(R.string.sports);
+        SecondaryDrawerItem item9 = new SecondaryDrawerItem().withName(R.string.food);
+        SecondaryDrawerItem item10 = new SecondaryDrawerItem().withName(R.string.travel);
+        SecondaryDrawerItem item11 = new SecondaryDrawerItem().withName(R.string.popular);
+
+
+        //create the drawer and remember the `Drawer` result object
+        mDrawer = new DrawerBuilder()
+                .withActivity(MainActivity.this)
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+
+                        new DividerDrawerItem(),
+                        item2,
+                        new DividerDrawerItem(),
+                        item3, item4, item5, item6, item7, item8, item9, item10, item11
+
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Log.i("DRAWER","clicked on position: "+position);
+                        if (position >= 4 && position <= 12) {
+                            viewPager.setCurrentItem(position-4, true);
+                            Log.i("DRAWER","clicked on position: "+position);
+                            return true;
+
+                        }
+                        if (position == -1){
+                            Intent youtubeIntent = new Intent(MainActivity.this, PlayVideos.class);
+                            startActivity(youtubeIntent);
+                            return true;
+                        }
+                        return false;
+                        // do something with the clicked item :D
+                    }
+                })
+                .build();
+
+        mDrawer.addStickyFooterItemAtPosition((new PrimaryDrawerItem().withName(R.string.videos).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                Intent youtubeIntent = new Intent(MainActivity.this, PlayVideos.class);
+                startActivity(youtubeIntent);
+                return true;
+            }
+        }).withIcon(android.R.drawable.ic_menu_upload_you_tube)), 0);
+        mDrawer.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withIcon(android.R.drawable.ic_menu_search), 0);
+        //modify an item of the drawer
+        //item1.withName("A new name for this drawerItem").withBadge("19").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700));
+        //notify the drawer about the updated element. it will take care about everything else
+
+        //Status bar setup
+        window = getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         fillColorArrays();
         mAccount = createSyncAccount(this);
 //        mProgress = new ProgressDialog(this);
 //        mProgress.setMessage("Loading...");
 
-     //   appBarLayout.setBackgroundColor(Color.parseColor(colorArray.get(3)));
         // Vice API URLs that data can be received through
         String getMostPopularURL = getResources().getString(R.string.get_most_popular);
         String getViceTodayURL = getResources().getString(R.string.get_vice_today);
@@ -142,66 +274,24 @@ public class MainActivity extends AppCompatActivity {
         DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
         downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
 
-        //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
-
-        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[3];
-
-        /* For calling the sync adapter to refresh manually -- currently crashes the app. */
-//        mResolver = getContentResolver();
-//        Bundle settingsBundle = new Bundle();
-//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-//        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-//        mResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-//        Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
-
-//        autoSyncData();
-
-//        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_calendar_day, "Latest");
-//        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_star, "Hot");
-//        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_today, "Loaded");
+    }
 
 
-//        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        //  mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-//        mDrawerList = (ListView)findViewById(R.id.left_drawer);
-
-        // DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.listview_item_row, drawerItem);
-        // mDrawerList.setAdapter(adapter);
-
-
-//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-//        mTitle = mDrawerTitle = getTitle();
-
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
-//                this,
-//                mDrawerLayout,
-//                toolbar,
-//                R.string.drawer_open,
-//                R.string.drawer_close
-//        )
-        {
-
-            /** Called when a drawer has settled in a completely closed state. */
-//            public void onDrawerClosed(View view) {
-//                super.onDrawerClosed(view);
-//                getSupportActionBar().setTitle(mTitle);
-//            }
-//
-//            /** Called when a drawer has settled in a completely open state. */
-//            public void onDrawerOpened(View drawerView) {
-//                super.onDrawerOpened(drawerView);
-//                getSupportActionBar().setTitle(mDrawerTitle);
-//            }
-//        };
-
-//            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-
+    /* Change toolbarcolor
+     *
+     */
+    @Override
+    public void changeColor(Palette.Swatch light, Palette.Swatch dark) {
+        if (light != null) {
+            toolbar.setBackgroundColor(light.getRgb());
+        }
+        if (dark != null) {
+            //TODO:Add support for lower versions if there is time
+            window.setStatusBarColor(dark.getRgb());
         }
     }
+
+
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
         @Override
         protected List<ViceItemsClass> doInBackground(String... myURL) {
@@ -241,23 +331,22 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<ViceItemsClass> result) {
             /* Notifications */
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
-            // TODO: Replace setSmallIcon with our app icon.
-            builder.setSmallIcon(android.R.drawable.ic_dialog_info);
+            builder.setSmallIcon(R.mipmap.ic_launcher);
             builder.setContentTitle("Vice Versa");
             builder.setContentText("New articles are now available.");
 
-            Intent intent= new Intent(MainActivity.this,MainActivity.class);
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
             builder.setContentIntent(pendingIntent);
             builder.setAutoCancel(true);
 
-            Notification notification= builder.build();
-            NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = builder.build();
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             manager.notify(NOTIFICATION_ID, notification);
 
             listViceArticles = result;
             loadingFinished = true;
-            for (int i = 0 ; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 urlArray.add(listViceArticles.get(i).getImage());
                 headlineArray.add(listViceArticles.get(i).getTitle());
                 idArray.add(listViceArticles.get(i).getId());
@@ -267,7 +356,9 @@ public class MainActivity extends AppCompatActivity {
             popularArticles.putStringArrayList("POPULARID", idArray);
             launchFragments();
 
-            setImagesHomeFragment(urlArray,headlineArray,idArray);
+
+            setImagesHomeFragment(urlArray, headlineArray, idArray);
+
             //Set images from home fragment
 
         }
@@ -288,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class DownloadPopularArticlesAsyncTask extends AsyncTask<String,Void,List<ViceItemsClass>>{
+    private class DownloadPopularArticlesAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
 
 
         @Override
@@ -315,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
 
             return item.getItems();
         }
+
         public String getInputData(InputStream stream) throws IOException {
             StringBuilder sb = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
@@ -330,6 +422,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> viceItemsClasses) {
+            //  popularBundle = new Bundle();
+            popularFragment = new PopularFragment();
+
+
+            popularImageUrl = viceItemsClasses.get(0).getImage();
             String getLatestURL = getResources().getString(R.string.get_latest);
             GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
             getDataAsyncTask.execute(getLatestURL);
@@ -337,15 +434,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillFragmentList(){
+    private void fillFragmentList() {
         fragmentList = new ArrayList<>();
+
         fragmentList.add(homeFragment);
         fragmentList.add(new NewsFragment());
         fragmentList.add(new FashionFragment());
         fragmentList.add(new TechFragment());
+        fragmentList.add(new MusicFragment());
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
+        fragmentList.add(popularFragment);
+
 
     }
 
@@ -363,12 +464,10 @@ public class MainActivity extends AppCompatActivity {
                 Bundle.EMPTY,
                 //21600); // To update every 6 hours
                 10);
-
         Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
        List<ViceItemsClass> result = new ArrayList<>();
         listViceArticles = result;
         loadingFinished = true;
-
         for (int i = 0 ; i < 8; i++){
             urlArray.add(listViceArticles.get(i).getImage());
             headlineArray.add(listViceArticles.get(i).getTitle());
@@ -391,10 +490,12 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    private void launchFragments(){
+
+    private void launchFragments() {
+
         fillFragmentList();
 
-        viewPager.setAdapter(new InfinitePagerAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 Fragment frag = null;
@@ -410,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
             public int getCount() {
                 return fragmentList.size();
             }
-        }));
+        });
 
         viewPager.setPageTransformer(true, new DepthPageTransformer());// viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(onPageChangeListener);
@@ -424,6 +525,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
+            mDrawer.setSelectionAtPosition(position+4,false);
+            if (popularFragment != null && popularFragment.popularImage != null) {
+                Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
+            }
+
             //Color Animation
             Random rand = new Random();
             position = rand.nextInt(19);
@@ -431,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
 
             Integer colorFrom = toolbarColor.getColor();
             Integer colorTo = Color.parseColor(colorArray.get(position));
-           // Integer colorStatusFrom = getS
+            // Integer colorStatusFrom = getS
             //Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             //ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
@@ -444,26 +550,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-//            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animator) {
-//                    if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-//                        getActivity().getWindow().setStatusBarColor((Integer) animator.getAnimatedValue());
-//                    }
-//                    if (currentapiVersion == Build.VERSION_CODES.KITKAT) {
-//                        tintManager.setStatusBarTintColor((Integer) animator.getAnimatedValue());
-//                    }
-//                }
-//            });
             colorAnimation.setDuration(1300);
             colorAnimation.setStartDelay(0);
             colorAnimation.start();
-//            colorStatusAnimation.setDuration(1300);
-//            colorStatusAnimation.setStartDelay(0);
-//            colorStatusAnimation.start();
 
-           // MainActivity.this.setTheme(R.style.ToolbarTheme1);
 
 
         }
@@ -474,10 +564,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void fillColorArrays(){
+    public void fillColorArrays() {
 
 
-        String[] colorStrings = { "#004D40",
+        String[] colorStrings = {"#004D40",
                 "#00695C",
                 "#00796B",
                 "#00897B",
@@ -496,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
                 "#A5D6A7",
                 "#C8E6C9",
                 "#E8F5E9"};
-       colorArray.addAll(Arrays.asList(colorStrings));
+        colorArray.addAll(Arrays.asList(colorStrings));
 
         statusColorArray.add("#000000");
         statusColorArray.add("#aa0000");
@@ -510,8 +600,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     // For authenticating an account.
-    public static Account createSyncAccount(Context context){
+    public static Account createSyncAccount(Context context) {
         Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
 //        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
@@ -520,7 +611,9 @@ public class MainActivity extends AppCompatActivity {
         return newAccount;
     }
 
-    public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray){
+
+    public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray) {
+
         Picasso.with(MainActivity.this).load(imageUrls.get(0)).fit().into(homeFragment.popularImage1);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(1)).fit().into(homeFragment.popularImage2);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(2)).fit().into(homeFragment.popularImage3);
@@ -531,58 +624,34 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(7)).fit().into(homeFragment.popularImage8);
     }
 
+    public void setStatusBarBgColor(View statusBar, int color) {
+        //status bar height
+        int actionBarHeight = getActionBarHeight();
+        int statusBarHeight = getStatusBarHeight();
+        //action bar height
+        statusBar.getLayoutParams().height = actionBarHeight + statusBarHeight;
+        statusBar.setBackgroundColor(color);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        return super.onOptionsItemSelected(item);
     }
 
-
-    private void selectItem(int position) {
-
-        Fragment fragment = null;
-
-        switch (position) {
-            case 0:
-             //   fragment = new CreateFragment();
-                break;
-            case 1:
-               // fragment = new ReadFragment();
-                break;
-            case 2:
-                //fragment = new ReadTop();
-                break;
-
-            default:
-                break;
+    public int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
+        return actionBarHeight;
+    }
 
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-           // fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(mNavigationDrawerItemTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-
-        } else {
-            Log.e("MainActivity", "Error in creating fragment");
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
         }
+        return result;
     }
 
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-//        mDrawerToggle.syncState();
-    }
 }
-
-
