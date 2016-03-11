@@ -1,7 +1,6 @@
 package com.adi.ho.jackie.versa_news;
 
 
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.animation.ArgbEvaluator;
@@ -58,6 +57,7 @@ import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 
+import com.adi.ho.jackie.versa_news.Fragments.MusicFragment;
 import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
 
 
@@ -97,6 +97,13 @@ import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import com.google.gson.Gson;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.BadgeStyle;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -110,7 +117,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 
 
 import java.util.Random;
@@ -157,10 +163,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     private CollapsingToolbarLayout toolbarLayout;
 
     private PopularFragment popularFragment;
-    Bundle popularBundle;
     private String popularImageUrl;
     private Window window;
-    private View statusbar;
 
 
     @Override
@@ -180,14 +184,59 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
+        new DrawerBuilder().withActivity(this).build();
+       // PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_home);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.drawer_sections).withSelectable(false);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.latest);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.news);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.fashion);
+        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.tech);
+        SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName(R.string.music);
+        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withName(R.string.sports);
+        SecondaryDrawerItem item9 = new SecondaryDrawerItem().withName(R.string.food);
+        SecondaryDrawerItem item10 = new SecondaryDrawerItem().withName(R.string.travel);
+        SecondaryDrawerItem item11 = new SecondaryDrawerItem().withName(R.string.popular);
 
 
+
+        //create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(MainActivity.this)
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .addDrawerItems(
+
+                        new DividerDrawerItem(),
+                        item2,
+                        new DividerDrawerItem(),
+                        item3,item4,item5,item6,item7,item8,item9,item10,item11
+
+                        )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                       if (position != 0 || position != 12){
+                           viewPager.setCurrentItem(position-2,true);
+                       }
+                        return false;
+                        // do something with the clicked item :D
+                    }
+                })
+                .build();
+
+        result.addStickyFooterItemAtPosition((new PrimaryDrawerItem().withName(R.string.videos).withIcon(android.R.drawable.ic_menu_upload_you_tube)), 0);
+        result.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withIcon(android.R.drawable.ic_menu_search),0);
+        //modify an item of the drawer
+        //item1.withName("A new name for this drawerItem").withBadge("19").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700));
+        //notify the drawer about the updated element. it will take care about everything else
+
+        //Status bar setup
         window = getWindow();
-
-// clear FLAG_TRANSLUCENT_STATUS flag:
+        // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         fillColorArrays();
@@ -218,12 +267,11 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         if (light != null) {
             toolbar.setBackgroundColor(light.getRgb());
         }
-        if (dark !=null ){
+        if (dark != null) {
             //TODO:Add support for lower versions if there is time
             window.setStatusBarColor(dark.getRgb());
         }
     }
-
 
 
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
@@ -270,13 +318,13 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             builder.setContentTitle("Vice Versa");
             builder.setContentText("New articles are now available.");
 
-            Intent intent= new Intent(MainActivity.this,MainActivity.class);
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
             builder.setContentIntent(pendingIntent);
             builder.setAutoCancel(true);
 
-            Notification notification= builder.build();
-            NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = builder.build();
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             manager.notify(NOTIFICATION_ID, notification);
 
             listViceArticles = result;
@@ -374,9 +422,9 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
         fragmentList.add(homeFragment);
         fragmentList.add(new NewsFragment());
-
         fragmentList.add(new FashionFragment());
         fragmentList.add(new TechFragment());
+        fragmentList.add(new MusicFragment());
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
@@ -554,7 +602,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
 
     // For authenticating an account.
-    public static Account createSyncAccount(Context context){
+    public static Account createSyncAccount(Context context) {
         Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
         AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
 //        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
@@ -575,22 +623,23 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(6)).fit().into(homeFragment.popularImage7);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(7)).fit().into(homeFragment.popularImage8);
     }
-    public void setStatusBarBgColor(View statusBar,int color){
-            //status bar height
-            int actionBarHeight = getActionBarHeight();
-            int statusBarHeight = getStatusBarHeight();
-            //action bar height
-            statusBar.getLayoutParams().height = actionBarHeight + statusBarHeight;
-            statusBar.setBackgroundColor(color);
+
+    public void setStatusBarBgColor(View statusBar, int color) {
+        //status bar height
+        int actionBarHeight = getActionBarHeight();
+        int statusBarHeight = getStatusBarHeight();
+        //action bar height
+        statusBar.getLayoutParams().height = actionBarHeight + statusBarHeight;
+        statusBar.setBackgroundColor(color);
 
 
     }
+
     public int getActionBarHeight() {
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
         return actionBarHeight;
     }

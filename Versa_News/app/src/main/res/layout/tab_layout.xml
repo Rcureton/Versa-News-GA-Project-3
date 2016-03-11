@@ -47,6 +47,7 @@
 
     <com.antonyt.infiniteviewpager.InfiniteViewPager
         android:id="@+id/viewpager"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
       />
