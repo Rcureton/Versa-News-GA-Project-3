@@ -31,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -43,8 +44,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 
@@ -73,6 +79,7 @@ import android.support.v4.view.ViewPager;
 import com.adi.ho.jackie.versa_news.Fragments.FoodFragment;
 import com.adi.ho.jackie.versa_news.Fragments.HomeFragment;
 import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
+import com.adi.ho.jackie.versa_news.Fragments.SearchFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
@@ -99,6 +106,9 @@ import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
+import com.easyandroidanimations.library.AnimationListener;
+import com.easyandroidanimations.library.PuffOutAnimation;
+import com.easyandroidanimations.library.SlideInUnderneathAnimation;
 import com.google.gson.Gson;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -168,7 +178,9 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     private String popularImageUrl;
     private Window window;
     private Drawer mDrawer;
-
+    private EditText mSearchEditText;
+    private ImageView mSearchButton;
+    private List<ViceItemsClass> alotOfArticles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +190,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mSearchEditText = (EditText)findViewById(R.id.search);
+        mSearchButton = (ImageView)findViewById(R.id.search__button_enter);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -187,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
+
         new DrawerBuilder().withActivity(this).build();
         // PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_home);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.drawer_sections).withSelectable(false);
@@ -244,10 +259,45 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                 return true;
             }
         }).withIcon(android.R.drawable.ic_menu_upload_you_tube)), 0);
-        mDrawer.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withIcon(android.R.drawable.ic_menu_search), 0);
+        mDrawer.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                mSearchEditText.setVisibility(View.VISIBLE);
+                mSearchButton.setVisibility(View.VISIBLE);
+                new SlideInUnderneathAnimation(mSearchEditText).setDuration(500).animate();
+
+                return true;
+            }
+        }).withIcon(android.R.drawable.ic_menu_search), 0);
         //modify an item of the drawer
         //item1.withName("A new name for this drawerItem").withBadge("19").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700));
         //notify the drawer about the updated element. it will take care about everything else
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSearchEditText.getText().toString().trim().isEmpty()) {
+                    PuffOutAnimation puffOutAnimation = new PuffOutAnimation(mSearchEditText);
+                    puffOutAnimation.setDuration(500).animate();
+                    puffOutAnimation.setListener(new AnimationListener() {
+                        @Override
+                        public void onAnimationEnd(com.easyandroidanimations.library.Animation animation) {
+                            SearchFragment searchFragment = new SearchFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("QUERY", mSearchEditText.getText().toString());
+                            searchFragment.setArguments(bundle);
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            searchFragment.show(getFragmentManager(),"SEARCH");
+                        }
+                    });
+                }
+                mSearchEditText.setText("");
+                mSearchEditText.setVisibility(View.GONE);
+                mSearchButton.setVisibility(View.GONE);
+
+            }
+        });
+
 
         //Status bar setup
         window = getWindow();
@@ -491,6 +541,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         // Clear notification when app is opened.
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
+
     }
 
 
@@ -637,7 +688,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         statusBar.getLayoutParams().height = actionBarHeight + statusBarHeight;
         statusBar.setBackgroundColor(color);
 
-
     }
 
     public int getActionBarHeight() {
@@ -658,5 +708,18 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         return result;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mSearchButton.setVisibility(View.GONE);
+        mSearchEditText.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSearchButton.setVisibility(View.GONE);
+        mSearchEditText.setVisibility(View.GONE);
+    }
 
 }

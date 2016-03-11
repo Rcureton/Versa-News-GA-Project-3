@@ -28,6 +28,6 @@
     <string name="travel">Travel</string>
     <string name="food">Food</string>
     <string name="popular">Most Popular</string>
-<string name="sports">Sports</string>
+    <string name="sports">Sports</string>
     <string name="videos">Videos</string>
 </resources>
