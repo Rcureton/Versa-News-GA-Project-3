@@ -31,6 +31,10 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
+    @Override
+    public void setRetainInstance(boolean retain) {
+        super.setRetainInstance(true);
+    }
 
     ArrayList<ViceItemsClass> listOfPopularArticles;
     public ImageView popularImage1;
