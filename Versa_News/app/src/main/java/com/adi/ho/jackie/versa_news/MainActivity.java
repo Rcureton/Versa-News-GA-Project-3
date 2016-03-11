@@ -544,8 +544,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             setTitle( String.valueOf(fragmentTitleList.get(position)) );
 
             //Color Animation
-//            Random rand = new Random();
-//            position = rand.nextInt(19);
             ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
 
             Integer colorFrom = toolbarColor.getColor();
