@@ -55,19 +55,19 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
         load.execute();
 //
 
-        mVideosList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Log.d("id",mVideos.get(position).getId());
-                Intent intent = YouTubeStandalonePlayer.createPlaylistIntent(PlayVideos.this,
-                        KEY, mVideos.get(position).getId());
-                startActivity(intent);
-
-//                Intent intent = new Intent(PlayVideos.this, PlayVideos.class);
-//                intent.putExtra("video", mVideos.get(position).getId());
-            }
-        });
+//        mVideosList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                Log.d("id",mVideos.get(position).getId());
+//                Intent intent = YouTubeStandalonePlayer.createPlaylistIntent(PlayVideos.this,
+//                        KEY, mVideos.get(position).getId());
+//                startActivity(intent);
+//
+////                Intent intent = new Intent(PlayVideos.this, PlayVideos.class);
+////                intent.putExtra("video", mVideos.get(position).getId());
+//            }
+//        });
 
 
     }
@@ -87,9 +87,10 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
 
 
 
-    public ArrayList<Playlist> getVideosList(){
+    public ArrayList<VideoItem> getVideosList(){
         helper= new YoutubeHelper(PlayVideos.this);
         mPlayListArrayList = new ArrayList<>();
+        ArrayList<VideoItem> videoList = new ArrayList<>();
 
         mPlayListArrayList = helper.getPlaylist();
         for (Playlist playlist : mPlayListArrayList) {
@@ -105,23 +106,23 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
             videoItem.setTitle(playlist.getSnippet().getTitle());
             videoItem.setDescription(playlist.getSnippet().getDescription());
 
-            mVideos.add(videoItem);
-    }return mPlayListArrayList;
+            videoList.add(videoItem);
+    }return videoList;
 
 }
 
 
-    public class LoadYoutubeTask extends AsyncTask<Void, Void, ArrayList<Playlist>> {
+    public class LoadYoutubeTask extends AsyncTask<Void, Void, ArrayList<VideoItem>> {
 
 
         @Override
-        protected ArrayList<Playlist> doInBackground(Void... params) {
+        protected ArrayList<VideoItem> doInBackground(Void... params) {
             return getVideosList();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Playlist> playlists) {
-            super.onPostExecute(playlists);
+        protected void onPostExecute(ArrayList<VideoItem> playlists) {
+            mVideos = playlists;
             YoutubeRecyclerAdapter youtubeAdapter = new YoutubeRecyclerAdapter(PlayVideos.this,mVideos);
             videoRecycler.setAdapter(youtubeAdapter);
         }

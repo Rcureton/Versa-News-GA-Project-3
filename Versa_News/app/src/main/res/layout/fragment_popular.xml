@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/popular_fragment_image"
-        android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <LinearLayout

@@ -18,5 +18,16 @@
     <string name="get_latest">http://vice.com/api/getlatest/</string>
     <string name="get_latest_category">http://vice.com/api/getlatest/category/</string>
     <string name="get_article">http://vice.com/api/article/</string>
-
+    <string name="drawer_home">Home</string>
+    <string name="drawer_sections">Sections</string>
+    <string name="latest">Latest Articles</string>
+    <string name="news">News</string>
+    <string name="fashion">Fashion</string>
+    <string name="tech">Tech</string>
+    <string name="music">Music</string>
+    <string name="travel">Travel</string>
+    <string name="food">Food</string>
+    <string name="popular">Most Popular</string>
+<string name="sports">Sports</string>
+    <string name="videos">Videos</string>
 </resources>
