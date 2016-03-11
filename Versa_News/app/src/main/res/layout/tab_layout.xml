@@ -38,7 +38,28 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:hint="Search"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:visibility="gone"/>
+                <ImageView
+                    android:id="@+id/search__button_enter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_search"
+                    android:layout_gravity="right|center"
+                    android:visibility="gone"/>
+                </FrameLayout>
+            </android.support.v7.widget.Toolbar>
 
 
         <!--</android.support.design.widget.CollapsingToolbarLayout>-->
@@ -51,6 +72,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
       />
+    <FrameLayout
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone"
+        android:layout_marginTop="?attr/actionBarSize">
 
+</FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
