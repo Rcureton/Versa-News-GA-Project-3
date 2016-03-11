@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     NotificationCompat.Builder builder;
     Account mAccount;
     ContentResolver mResolver;
-    ProgressDialog mProgress;
 
     private int horizontalChilds;
     private int verticalChilds;
@@ -324,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            mProgress.show();
         }
 
         @Override
@@ -529,6 +527,21 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             if (popularFragment != null && popularFragment.popularImage != null) {
                 Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
             }
+
+            // Update title
+            ArrayList<String> fragmentTitleList = new ArrayList<>();
+
+            fragmentTitleList.add("Home"); // 0
+            fragmentTitleList.add("News"); // 1
+            fragmentTitleList.add("Fashion");  // 2
+            fragmentTitleList.add("Tech"); // 3
+            fragmentTitleList.add("Music"); // 4
+            fragmentTitleList.add("Sports"); // 5
+            fragmentTitleList.add("Food");  // 6
+            fragmentTitleList.add("Travel"); // 7
+            fragmentTitleList.add("Most Popular"); // 8
+
+            setTitle( String.valueOf(fragmentTitleList.get(position)) );
 
             //Color Animation
             Random rand = new Random();
