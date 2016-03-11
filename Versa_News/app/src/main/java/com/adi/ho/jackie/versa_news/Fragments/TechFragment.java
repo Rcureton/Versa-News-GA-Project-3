@@ -65,6 +65,11 @@ public class TechFragment extends Fragment {
 
     }
 
+    @Override
+    public void setRetainInstance(boolean retain) {
+        super.setRetainInstance(retain);
+    }
+
     private class LoadNewsList extends AsyncTask<Void,Void,List<ViceItemsClass>> {
 
 

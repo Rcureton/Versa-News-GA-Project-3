@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +35,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
@@ -69,7 +69,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements PopularFragment.ChangeToolbarColor {
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     NotificationCompat.Builder builder;
     Account mAccount;
     ContentResolver mResolver;
-    ProgressDialog mProgress;
 
     private int horizontalChilds;
     private int verticalChilds;
@@ -218,9 +216,13 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // Call async task that gets the API data and show that data in the view.
-        DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
-        downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Call async task that gets the API data and show that data in the view.
+            DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
+            downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+        } else {
+            Toast.makeText(MainActivity.this, "Please connect to the internet to refresh the feed", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -272,14 +274,12 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            mProgress.show();
         }
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> result) {
             /* Notifications */
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
-            // TODO: Replace setSmallIcon with our app icon.
             builder.setSmallIcon(android.R.drawable.ic_dialog_info);
             builder.setContentTitle("Vice Versa");
             builder.setContentText("New articles are now available.");
@@ -413,12 +413,10 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                 Bundle.EMPTY,
                 //21600); // To update every 6 hours
                 10);
-
         Toast.makeText(MainActivity.this, "Syncing...", Toast.LENGTH_SHORT).show();
        List<ViceItemsClass> result = new ArrayList<>();
         listViceArticles = result;
         loadingFinished = true;
-
         for (int i = 0 ; i < 8; i++){
             urlArray.add(listViceArticles.get(i).getImage());
             headlineArray.add(listViceArticles.get(i).getTitle());
@@ -481,9 +479,22 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                 Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
             }
 
+            // Update title
+            ArrayList<String> fragmentTitleList = new ArrayList<>();
+
+            fragmentTitleList.add("Home"); // 0
+            fragmentTitleList.add("News"); // 1
+            fragmentTitleList.add("Fashion");  // 2
+            fragmentTitleList.add("Tech"); // 3
+            fragmentTitleList.add("Music"); // 4
+            fragmentTitleList.add("Sports"); // 5
+            fragmentTitleList.add("Food");  // 6
+            fragmentTitleList.add("Travel"); // 7
+            fragmentTitleList.add("Most Popular"); // 8
+
+            setTitle( String.valueOf(fragmentTitleList.get(position)) );
+
             //Color Animation
-            Random rand = new Random();
-            position = rand.nextInt(19);
             ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
 
             Integer colorFrom = toolbarColor.getColor();
@@ -518,37 +529,26 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     public void fillColorArrays() {
 
 
-        String[] colorStrings = {"#004D40",
-                "#00695C",
-                "#00796B",
-                "#00897B",
-                "#009688",
-                "#26A69A",
-                "#4DB6AC",
-                "#80CBC4",
-                "#B2DFDB",
-                "#1B5E20",
-                "#2E7D32",
-                "#388E3C",
-                "#43A047",
-                "#4CAF50",
-                "#66BB6A",
-                "#81C784",
-                "#A5D6A7",
-                "#C8E6C9",
-                "#E8F5E9"};
+        String[] colorStrings = {"#FFC107",
+                "#FF6E40",
+                "#FFE0B2",
+                "#DCE775",
+                "#C5E1A5",
+                "#A7FFEB",
+                "#8C9EFF",
+                "#FF8A80",
+                "#BBDEFB",
+        };
         colorArray.addAll(Arrays.asList(colorStrings));
-
-        statusColorArray.add("#000000");
-        statusColorArray.add("#aa0000");
-        statusColorArray.add("#00aa00");
-        statusColorArray.add("#0000aa");
-        statusColorArray.add("#ff0000");
-        statusColorArray.add("#00ff00");
-        statusColorArray.add("#9900ff");
-        statusColorArray.add("#ff00ff");
-
-
+        statusColorArray.add("#64FFDA");
+        statusColorArray.add("#0277BD");
+        statusColorArray.add("#00E5FF");
+        statusColorArray.add("#FF3D00");
+        statusColorArray.add("#6D4C41");
+        statusColorArray.add("#FFCC80");
+        statusColorArray.add("#2196F3");
+        statusColorArray.add("#607D8B");
+        statusColorArray.add("#212121");
     }
 
 
@@ -606,5 +606,3 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
 
 }
-
-

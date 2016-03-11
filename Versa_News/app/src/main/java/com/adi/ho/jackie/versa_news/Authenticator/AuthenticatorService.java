@@ -1,4 +1,4 @@
-package com.adi.ho.jackie.versa_news;
+package com.adi.ho.jackie.versa_news.Authenticator;
 
 import android.app.Service;
 import android.content.Intent;

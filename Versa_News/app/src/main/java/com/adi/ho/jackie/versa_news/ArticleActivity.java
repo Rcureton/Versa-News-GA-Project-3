@@ -3,6 +3,7 @@ package com.adi.ho.jackie.versa_news;
 
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,7 +78,6 @@ public class ArticleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article);
         toolbar = (Toolbar) findViewById(R.id.article_toolbar);
         setSupportActionBar(toolbar);
-
 
         mTwitterButton = (ImageButton)findViewById(R.id.twitterButton);
         mTwitterButton.setOnClickListener(new View.OnClickListener() {
