@@ -21,15 +21,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-
-import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
-
-
-import android.os.Build;
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -39,69 +31,29 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
-
-
-import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
-
-
-import android.graphics.drawable.ColorDrawable;
-import android.support.design.widget.CollapsingToolbarLayout;
-
-import com.adi.ho.jackie.versa_news.Fragments.MusicFragment;
-import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
-
-
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.graphics.Color;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-
 import com.adi.ho.jackie.versa_news.Fragments.FoodFragment;
 import com.adi.ho.jackie.versa_news.Fragments.HomeFragment;
+import com.adi.ho.jackie.versa_news.Fragments.MusicFragment;
 import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
+import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
-
-import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
-import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
-import com.antonyt.infiniteviewpager.InfiniteViewPager;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-
-
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
-import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
-import com.antonyt.infiniteviewpager.InfiniteViewPager;
+import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 import com.google.gson.Gson;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.BadgeStyle;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -114,13 +66,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-
-
 import java.util.Random;
 
 
