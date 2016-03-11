@@ -604,10 +604,10 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
             Integer colorFrom = toolbarColor.getColor();
             Integer colorTo = Color.parseColor(colorArray.get(position));
-            // Integer colorStatusFrom = getS
-            //Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
+             Integer colorStatusFrom = window.getStatusBarColor();
+            Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-            //ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
+            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
 
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -616,10 +616,19 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                     toolbar.setBackgroundColor((Integer) animator.getAnimatedValue());
                 }
             });
+            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    window.setStatusBarColor((Integer)animation.getAnimatedValue());
+                }
+            });
 
             colorAnimation.setDuration(1300);
             colorAnimation.setStartDelay(0);
             colorAnimation.start();
+            colorStatusAnimation.setDuration(1300);
+            colorStatusAnimation.setStartDelay(0);
+            colorStatusAnimation.start();
 
 
 
