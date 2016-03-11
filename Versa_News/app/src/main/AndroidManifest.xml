@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name="com.adi.ho.jackie.versa_news.AuthenticatorService">
+            android:name=".Authenticator.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
