@@ -8,7 +8,9 @@ Versa News allows users to browse through their favorite Vice articles and video
 
 #Bugs
 . Minor layout issues when using different phones. 
+
 . Memory issues present (sometimes) when rapidly scrolling. 
+
 . Twitter's share feature is missing direct links because of lack of 'whitelisting' from Twitter. (May be implemented in the future)
 
 
