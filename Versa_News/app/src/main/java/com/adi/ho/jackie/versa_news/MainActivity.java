@@ -30,6 +30,7 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -76,6 +77,7 @@ import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
 
+import com.adi.ho.jackie.versa_news.Youtube.PlayVideos;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     private int verticalChilds;
     private TabLayout tabLayout;
     public Toolbar toolbar;
-    private InfiniteViewPager viewPager;
+    private ViewPager viewPager;
     private List<Fragment> fragmentList;
     public List<ViceItemsClass> listViceArticles;
     private Bundle popularArticles;
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     private PopularFragment popularFragment;
     private String popularImageUrl;
     private Window window;
+    private Drawer mDrawer;
 
 
     @Override
@@ -174,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         setContentView(R.layout.tab_layout);
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -185,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
         new DrawerBuilder().withActivity(this).build();
-       // PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_home);
+        // PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_home);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.drawer_sections).withSelectable(false);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.latest);
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.news);
@@ -198,9 +201,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         SecondaryDrawerItem item11 = new SecondaryDrawerItem().withName(R.string.popular);
 
 
-
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        mDrawer = new DrawerBuilder()
                 .withActivity(MainActivity.this)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
@@ -210,23 +212,39 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                         new DividerDrawerItem(),
                         item2,
                         new DividerDrawerItem(),
-                        item3,item4,item5,item6,item7,item8,item9,item10,item11
+                        item3, item4, item5, item6, item7, item8, item9, item10, item11
 
-                        )
+                )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                       if (position != 0 || position != 12){
-                           viewPager.setCurrentItem(position-2,true);
-                       }
+                        Log.i("DRAWER","clicked on position: "+position);
+                        if (position >= 4 && position <= 12) {
+                            viewPager.setCurrentItem(position-4, true);
+                            Log.i("DRAWER","clicked on position: "+position);
+                            return true;
+
+                        }
+                        if (position == -1){
+                            Intent youtubeIntent = new Intent(MainActivity.this, PlayVideos.class);
+                            startActivity(youtubeIntent);
+                            return true;
+                        }
                         return false;
                         // do something with the clicked item :D
                     }
                 })
                 .build();
 
-        result.addStickyFooterItemAtPosition((new PrimaryDrawerItem().withName(R.string.videos).withIcon(android.R.drawable.ic_menu_upload_you_tube)), 0);
-        result.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withIcon(android.R.drawable.ic_menu_search),0);
+        mDrawer.addStickyFooterItemAtPosition((new PrimaryDrawerItem().withName(R.string.videos).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                Intent youtubeIntent = new Intent(MainActivity.this, PlayVideos.class);
+                startActivity(youtubeIntent);
+                return true;
+            }
+        }).withIcon(android.R.drawable.ic_menu_upload_you_tube)), 0);
+        mDrawer.addItemAtPosition(new PrimaryDrawerItem().withName(R.string.search).withIcon(android.R.drawable.ic_menu_search), 0);
         //modify an item of the drawer
         //item1.withName("A new name for this drawerItem").withBadge("19").withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700));
         //notify the drawer about the updated element. it will take care about everything else
@@ -480,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
         fillFragmentList();
 
-        viewPager.setAdapter(new InfinitePagerAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 Fragment frag = null;
@@ -496,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             public int getCount() {
                 return fragmentList.size();
             }
-        }));
+        });
 
         viewPager.setPageTransformer(true, new DepthPageTransformer());// viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(onPageChangeListener);
@@ -510,7 +528,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
 
         @Override
         public void onPageSelected(int position) {
-            if (popularFragment != null) {
+            mDrawer.setSelectionAtPosition(position+4,false);
+            if (popularFragment != null && popularFragment.popularImage != null) {
                 Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
             }
 
@@ -534,26 +553,10 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                 }
             });
 
-//            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animator) {
-//                    if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-//                        getActivity().getWindow().setStatusBarColor((Integer) animator.getAnimatedValue());
-//                    }
-//                    if (currentapiVersion == Build.VERSION_CODES.KITKAT) {
-//                        tintManager.setStatusBarTintColor((Integer) animator.getAnimatedValue());
-//                    }
-//                }
-//            });
             colorAnimation.setDuration(1300);
             colorAnimation.setStartDelay(0);
             colorAnimation.start();
-//            colorStatusAnimation.setDuration(1300);
-//            colorStatusAnimation.setStartDelay(0);
-//            colorStatusAnimation.start();
 
-            // MainActivity.this.setTheme(R.style.ToolbarTheme1);
 
 
         }
