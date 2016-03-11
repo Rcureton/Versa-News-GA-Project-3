@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     private EditText mSearchEditText;
     private ImageView mSearchButton;
     private List<ViceItemsClass> alotOfArticles;
-
+    private FrameLayout mToolbarContainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mSearchEditText = (EditText) findViewById(R.id.search);
         mSearchButton = (ImageView) findViewById(R.id.search__button_enter);
+        mToolbarContainer = (FrameLayout)findViewById(R.id.toolbar_container);
+
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -267,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                 mSearchEditText.setVisibility(View.VISIBLE);
                 mSearchButton.setVisibility(View.VISIBLE);
+                mToolbarContainer.setVisibility(View.VISIBLE);
                 new SlideInUnderneathAnimation(mSearchEditText).setDuration(500).animate();
 
                 return true;
@@ -295,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                     });
                 }
                 mSearchEditText.setText("");
+                mToolbarContainer.setVisibility(View.GONE);
                 mSearchEditText.setVisibility(View.GONE);
                 mSearchButton.setVisibility(View.GONE);
 
@@ -732,6 +736,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         super.onBackPressed();
         mSearchButton.setVisibility(View.GONE);
         mSearchEditText.setVisibility(View.GONE);
+        mToolbarContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -739,6 +744,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         super.onPause();
         mSearchButton.setVisibility(View.GONE);
         mSearchEditText.setVisibility(View.GONE);
+        mToolbarContainer.setVisibility(View.GONE);
     }
 
 }
