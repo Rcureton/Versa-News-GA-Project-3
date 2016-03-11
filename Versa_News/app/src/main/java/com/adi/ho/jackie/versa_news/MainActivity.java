@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         protected void onPostExecute(List<ViceItemsClass> result) {
             /* Notifications */
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
-            builder.setSmallIcon(R.mipmap.ic_launcher);
+            builder.setSmallIcon(android.R.drawable.ic_dialog_info);
             builder.setContentTitle("Vice Versa");
             builder.setContentText("New articles are now available.");
 
