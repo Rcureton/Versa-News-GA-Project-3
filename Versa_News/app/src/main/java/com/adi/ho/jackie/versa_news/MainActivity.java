@@ -292,12 +292,13 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
                             Bundle bundle = new Bundle();
                             bundle.putString("QUERY", mSearchEditText.getText().toString());
                             searchFragment.setArguments(bundle);
+                            searchFragment.query = mSearchEditText.getText().toString();
                             FragmentManager fragmentManager = getSupportFragmentManager();
-                            searchFragment.show(getFragmentManager(), "SEARCH");
+                            searchFragment.show(getFragmentManager(), mSearchEditText.getText().toString());
                         }
                     });
                 }
-                mSearchEditText.setText("");
+              //  mSearchEditText.setText("");
                 mToolbarContainer.setVisibility(View.GONE);
                 mSearchEditText.setVisibility(View.GONE);
                 mSearchButton.setVisibility(View.GONE);

@@ -43,7 +43,7 @@ public class SearchFragment extends DialogFragment {
     List<ViceItemsClass> newsList;
     RecyclerView newsRecycler;
     private int page = 0;
-    private String query;
+    public String query;
     private List<ViceItemsClass> filteredNewsList;
     private ProgressBar progressBar;
     private FrameLayout searchContainer;
@@ -65,7 +65,13 @@ public class SearchFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         progressBar = (ProgressBar)view.findViewById(R.id.search_progress_bar);
         newsRecycler = (RecyclerView) view.findViewById(R.id.fashion_recycle_list);
-        query = getArguments().getString("QUERY").toLowerCase();
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            query = bundle.getString("QUERY").toLowerCase();
+        } else {
+            query = getTag();
+        }
+        //query = getArguments().getString("QUERY").toLowerCase();
 
         new LoadNewsList().execute(String.valueOf(page));
 
@@ -137,6 +143,9 @@ public class SearchFragment extends DialogFragment {
                     }
 
             }
+                if (filteredNewsList.isEmpty()){
+                    getDialog().dismiss();
+                }
             ArticleRecyclerAdapter adapter = new ArticleRecyclerAdapter(getActivity(), filteredNewsList);
             newsRecycler.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
