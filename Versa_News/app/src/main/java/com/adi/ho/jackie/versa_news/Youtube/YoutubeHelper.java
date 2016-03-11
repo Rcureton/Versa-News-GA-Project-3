@@ -55,9 +55,28 @@ public class YoutubeHelper {
                 mPlayListArray.add(playlist1);
             }
 
+            String page= playlistListResponse.getNextPageToken();
+            playlistListResponse=youTube.playlists().list("snippet").setChannelId("UC0iwHRFpv2_fpojZgQhElEQ").setPageToken(page).execute();
+            playlistList= playlistListResponse.getItems();
+            for (Playlist playlist1: playlistList) {
+                mPlayListArray.add(playlist1);
+            }
+            page= playlistListResponse.getNextPageToken();
+            playlistListResponse=youTube.playlists().list("snippet").setChannelId("UC0iwHRFpv2_fpojZgQhElEQ").setPageToken(page).execute();
+            playlistList= playlistListResponse.getItems();
+            for (Playlist playlist1: playlistList) {
+                mPlayListArray.add(playlist1);
+            }
+            page= playlistListResponse.getNextPageToken();
+            playlistListResponse=youTube.playlists().list("snippet").setChannelId("UC0iwHRFpv2_fpojZgQhElEQ").setPageToken(page).execute();
+            playlistList= playlistListResponse.getItems();
+            for (Playlist playlist1: playlistList) {
+                mPlayListArray.add(playlist1);
+            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Throwable thr) {
+            thr.printStackTrace();
         }return mPlayListArray;
 
     }
