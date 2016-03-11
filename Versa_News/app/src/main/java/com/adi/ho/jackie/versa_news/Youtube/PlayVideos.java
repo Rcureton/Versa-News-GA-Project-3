@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.adi.ho.jackie.versa_news.R;
+import com.adi.ho.jackie.versa_news.RecyclerViewStuff.DividerItemDecoration;
 import com.adi.ho.jackie.versa_news.RecyclerViewStuff.YoutubeRecyclerAdapter;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -48,6 +49,7 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PlayVideos.this);
         videoRecycler.setHasFixedSize(true);
         videoRecycler.setLayoutManager(linearLayoutManager);
+        videoRecycler.addItemDecoration(new DividerItemDecoration(PlayVideos.this));
 
         mVideos= new ArrayList<>();
 

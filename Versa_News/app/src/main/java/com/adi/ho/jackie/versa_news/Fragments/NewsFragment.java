@@ -72,7 +72,7 @@ public class NewsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main_menu,menu);
+       // inflater.inflate(R.menu.main_menu,menu);
     }
 
     private class LoadNewsList extends AsyncTask<Void,Void,List<ViceItemsClass>> {

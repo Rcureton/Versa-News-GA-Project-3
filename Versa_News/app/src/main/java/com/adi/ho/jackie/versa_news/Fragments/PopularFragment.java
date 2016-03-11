@@ -25,6 +25,7 @@ import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
 import com.adi.ho.jackie.versa_news.MainActivity;
 import com.adi.ho.jackie.versa_news.R;
+import com.easyandroidanimations.library.FlipVerticalAnimation;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -55,6 +56,7 @@ public class PopularFragment extends Fragment {
     public TextView popularHeadline;
     public TextView popularPreview;
     public TextView popularId;
+    private int up;
 
     private ArrayList<ViceItemsClass> popularList;
     int listPosition = 0;
@@ -77,7 +79,7 @@ public class PopularFragment extends Fragment {
         popularHeadline = (TextView)view.findViewById(R.id.popular_fragment_headline);
         popularPreview = (TextView)view.findViewById(R.id.popular_fragment_preview);
         popularId = (TextView)view.findViewById(R.id.popular_fragment_id);
-
+        up = -1;
         DownloadPopularArticlesAsyncTask downloadATask = new DownloadPopularArticlesAsyncTask();
         String popularUrl = getString(R.string.get_most_popular);
         downloadATask.execute(popularUrl);
@@ -92,7 +94,6 @@ public class PopularFragment extends Fragment {
                 popularHeadline.setText(popularList.get(listPosition).getTitle());
                 popularPreview.setText(popularList.get(listPosition).getPreview());
                 popularId.setText(popularList.get(listPosition).getId());
-
                 Picasso.with(getContext()).load(popularList.get(listPosition).getImage()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
@@ -149,6 +150,7 @@ public class PopularFragment extends Fragment {
                 } else {
                     listPosition = listPosition+1;
                 }
+                up = 0;
                 return true; // Bottom to top
             } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                 if (listPosition == 0){
@@ -156,6 +158,7 @@ public class PopularFragment extends Fragment {
                 } else {
                     listPosition = listPosition-1;
                 }
+                up=1;
                 return true; // Top to bottom
             }
             return false;

@@ -343,13 +343,53 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
      */
     @Override
     public void changeColor(Palette.Swatch light, Palette.Swatch dark) {
+        Integer colorFrom;
+        Integer colorTo;
+        Integer colorStatusFrom;
+        Integer colorStatusTo;
+        ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
         if (light != null) {
-            toolbar.setBackgroundColor(light.getRgb());
+             colorFrom = toolbarColor.getColor();
+            colorTo = light.getRgb();
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    toolbar.setBackgroundColor((Integer) animator.getAnimatedValue());
+                }
+            });
+            colorAnimation.setDuration(1300);
+            colorAnimation.setStartDelay(0);
+            colorAnimation.start();
+//            toolbar.setBackgroundColor(light.getRgb());
+
         }
         if (dark != null) {
+            colorStatusFrom = window.getStatusBarColor();
+            colorStatusTo = dark.getRgb();
+            ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
             //TODO:Add support for lower versions if there is time
-            window.setStatusBarColor(dark.getRgb());
+//            window.setStatusBarColor(dark.getRgb());
+            colorStatusAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    window.setStatusBarColor((Integer) animation.getAnimatedValue());
+                }
+            });
+            colorStatusAnimation.setDuration(1300);
+            colorStatusAnimation.setStartDelay(0);
+            colorStatusAnimation.start();
         }
+
+
+
+
+
+
+
+
+
     }
 
 
