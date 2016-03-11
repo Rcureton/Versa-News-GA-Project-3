@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -61,6 +62,7 @@ public class ArticleActivity extends AppCompatActivity {
     private String articleId;
     private ImageView mImageView;
     private ImageButton mTwitterButton;
+    public Toolbar toolbar;
 
     CallbackManager callbackManager;
     ShareDialog shareDialog;
@@ -73,6 +75,8 @@ public class ArticleActivity extends AppCompatActivity {
         Fabric.with(this, new Twitter(authConfig), new TwitterCore(authConfig), new TweetComposer());
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_article);
+        toolbar = (Toolbar) findViewById(R.id.article_toolbar);
+        setSupportActionBar(toolbar);
 
 
         mTwitterButton = (ImageButton)findViewById(R.id.twitterButton);
@@ -105,14 +109,14 @@ public class ArticleActivity extends AppCompatActivity {
 //            }
 //        });
 
-        mImageView = (ImageView) findViewById(R.id.imageView);
-        Picasso.with(ArticleActivity.this).load("https://vice-images.vice.com/images/content-images-crops/2016/03/07/the-vice-morning-bulletin-03-07-16-body-image-1457354769-size_1000.jpg").fit().into(mImageView);
+//        mImageView = (ImageView) findViewById(R.id.imageView);
+//        Picasso.with(ArticleActivity.this).load("https://vice-images.vice.com/images/content-images-crops/2016/03/07/the-vice-morning-bulletin-03-07-16-body-image-1457354769-size_1000.jpg").fit().into(mImageView);
+//
+//        //
 
         //
 
-        //
-
-        articleImage = (ImageView) findViewById(R.id.imageView);
+//        articleImage = (ImageView) findViewById(R.id.imageView);
         articleAuthor = (TextView) findViewById(R.id.authorTextView);
         articleDate = (TextView) findViewById(R.id.dateTextView);
         articleBody = (WebView) findViewById(R.id.articleText);
@@ -249,7 +253,7 @@ public class ArticleActivity extends AppCompatActivity {
                 }
             });
             articleCategory.setText(category);
-            Picasso.with(ArticleActivity.this).load(urlImage).fit().into(articleImage);
+//            Picasso.with(ArticleActivity.this).load(urlImage).fit().into(articleImage);
             getViceUrl(title,description,url);
 
         }
