@@ -91,6 +91,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
@@ -269,9 +270,13 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // Call async task that gets the API data and show that data in the view.
-        DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
-        downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Call async task that gets the API data and show that data in the view.
+            DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
+            downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+        } else {
+            Toast.makeText(MainActivity.this, "Please connect to the internet to refresh the feed", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
