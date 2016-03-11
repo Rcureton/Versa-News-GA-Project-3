@@ -544,8 +544,8 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
             setTitle( String.valueOf(fragmentTitleList.get(position)) );
 
             //Color Animation
-            Random rand = new Random();
-            position = rand.nextInt(19);
+//            Random rand = new Random();
+//            position = rand.nextInt(19);
             ColorDrawable toolbarColor = (ColorDrawable) toolbar.getBackground();
 
             Integer colorFrom = toolbarColor.getColor();
@@ -580,37 +580,26 @@ public class MainActivity extends AppCompatActivity implements PopularFragment.C
     public void fillColorArrays() {
 
 
-        String[] colorStrings = {"#004D40",
-                "#00695C",
-                "#00796B",
-                "#00897B",
-                "#009688",
-                "#26A69A",
-                "#4DB6AC",
-                "#80CBC4",
-                "#B2DFDB",
-                "#1B5E20",
-                "#2E7D32",
-                "#388E3C",
-                "#43A047",
-                "#4CAF50",
-                "#66BB6A",
-                "#81C784",
-                "#A5D6A7",
-                "#C8E6C9",
-                "#E8F5E9"};
+        String[] colorStrings = {"#FFC107",
+                "#FF6E40",
+                "#FFE0B2",
+                "#DCE775",
+                "#C5E1A5",
+                "#A7FFEB",
+                "#8C9EFF",
+                "#FF8A80",
+                "#BBDEFB",
+        };
         colorArray.addAll(Arrays.asList(colorStrings));
-
-        statusColorArray.add("#000000");
-        statusColorArray.add("#aa0000");
-        statusColorArray.add("#00aa00");
-        statusColorArray.add("#0000aa");
-        statusColorArray.add("#ff0000");
-        statusColorArray.add("#00ff00");
-        statusColorArray.add("#9900ff");
-        statusColorArray.add("#ff00ff");
-
-
+        statusColorArray.add("#64FFDA");
+        statusColorArray.add("#0277BD");
+        statusColorArray.add("#00E5FF");
+        statusColorArray.add("#FF3D00");
+        statusColorArray.add("#6D4C41");
+        statusColorArray.add("#FFCC80");
+        statusColorArray.add("#2196F3");
+        statusColorArray.add("#607D8B");
+        statusColorArray.add("#212121");
     }
 
 
