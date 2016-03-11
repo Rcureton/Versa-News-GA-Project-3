@@ -58,13 +58,12 @@ public class PlayVideos extends YouTubeBaseActivity implements YouTubePlayer.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_videos);
 
-        //toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         videoRecycler = (RecyclerView)findViewById(R.id.player_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PlayVideos.this);
         videoRecycler.setHasFixedSize(true);
         videoRecycler.setLayoutManager(linearLayoutManager);
+        setTitle("Vice on YouTube");
 
         mVideos= new ArrayList<>();
 
