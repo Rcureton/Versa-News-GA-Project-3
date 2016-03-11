@@ -1,6 +1,7 @@
 package com.adi.ho.jackie.versa_news;
 
 
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.animation.ArgbEvaluator;
@@ -21,6 +22,12 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+
+
+import android.os.Build;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -28,22 +35,62 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+
 import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
 import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
+
+
+import com.adi.ho.jackie.versa_news.Fragments.FashionFragment;
+
+
+import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.CollapsingToolbarLayout;
+
+import com.adi.ho.jackie.versa_news.Fragments.PopularFragment;
+
+
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+
 import com.adi.ho.jackie.versa_news.Fragments.FoodFragment;
 import com.adi.ho.jackie.versa_news.Fragments.HomeFragment;
 import com.adi.ho.jackie.versa_news.Fragments.NewsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.SportsFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TechFragment;
 import com.adi.ho.jackie.versa_news.Fragments.TravelFragment;
+
+import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
+import com.antonyt.infiniteviewpager.InfiniteViewPager;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+
+
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceDataClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceItemsClass;
 import com.adi.ho.jackie.versa_news.GSONClasses.ViceSearchResultsClass;
@@ -58,12 +105,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+
+
+import java.util.Random;
+
+
+public class MainActivity extends AppCompatActivity implements PopularFragment.ChangeToolbarColor {
+
     private String[] mNavigationDrawerItemTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -102,19 +156,22 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private CollapsingToolbarLayout toolbarLayout;
 
+    private PopularFragment popularFragment;
+    Bundle popularBundle;
+    private String popularImageUrl;
+    private Window window;
+    private View statusbar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         setContentView(R.layout.tab_layout);
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         viewPager = (InfiniteViewPager) findViewById(R.id.viewpager);
-
-        //tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
-        //toolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        statusbar = (View)findViewById(R.id.statusBarBackground);
 
         listViceArticles = new ArrayList<>();
         urlArray = new ArrayList<>();
@@ -124,12 +181,21 @@ public class MainActivity extends AppCompatActivity {
         colorArray = new ArrayList<>();
         statusColorArray = new ArrayList<>();
         homeFragment = new HomeFragment();
+
+
+        window = getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         fillColorArrays();
         mAccount = createSyncAccount(this);
 //        mProgress = new ProgressDialog(this);
 //        mProgress.setMessage("Loading...");
 
-     //   appBarLayout.setBackgroundColor(Color.parseColor(colorArray.get(3)));
         // Vice API URLs that data can be received through
         String getMostPopularURL = getResources().getString(R.string.get_most_popular);
         String getViceTodayURL = getResources().getString(R.string.get_vice_today);
@@ -141,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         // Call async task that gets the API data and show that data in the view.
         DownloadPopularArticlesAsyncTask downloadPopularArticlesAsyncTask = new DownloadPopularArticlesAsyncTask();
         downloadPopularArticlesAsyncTask.execute(getMostPopularURL);
+
 
         //  appBarLayout.addOnOffsetChangedListener(appBarOffsetListener);
 
@@ -202,6 +269,24 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    }
+    /* Change toolbarcolor
+     *
+     */
+    @Override
+    public void changeColor(Palette.Swatch light, Palette.Swatch dark) {
+        if (light != null) {
+            toolbar.setBackgroundColor(light.getRgb());
+        }
+        if (dark !=null ){
+            //TODO:Add support for lower versions if there is time
+            window.setStatusBarColor(dark.getRgb());
+        }
+    }
+
+
+
     private class GetDataAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
         @Override
         protected List<ViceItemsClass> doInBackground(String... myURL) {
@@ -257,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
             listViceArticles = result;
             loadingFinished = true;
-            for (int i = 0 ; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 urlArray.add(listViceArticles.get(i).getImage());
                 headlineArray.add(listViceArticles.get(i).getTitle());
                 idArray.add(listViceArticles.get(i).getId());
@@ -267,7 +352,9 @@ public class MainActivity extends AppCompatActivity {
             popularArticles.putStringArrayList("POPULARID", idArray);
             launchFragments();
 
-            setImagesHomeFragment(urlArray,headlineArray,idArray);
+
+            setImagesHomeFragment(urlArray, headlineArray, idArray);
+
             //Set images from home fragment
 
         }
@@ -288,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class DownloadPopularArticlesAsyncTask extends AsyncTask<String,Void,List<ViceItemsClass>>{
+    private class DownloadPopularArticlesAsyncTask extends AsyncTask<String, Void, List<ViceItemsClass>> {
 
 
         @Override
@@ -315,6 +402,7 @@ public class MainActivity extends AppCompatActivity {
 
             return item.getItems();
         }
+
         public String getInputData(InputStream stream) throws IOException {
             StringBuilder sb = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
@@ -330,6 +418,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<ViceItemsClass> viceItemsClasses) {
+            //  popularBundle = new Bundle();
+            popularFragment = new PopularFragment();
+
+
+            popularImageUrl = viceItemsClasses.get(0).getImage();
             String getLatestURL = getResources().getString(R.string.get_latest);
             GetDataAsyncTask getDataAsyncTask = new GetDataAsyncTask();
             getDataAsyncTask.execute(getLatestURL);
@@ -337,15 +430,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillFragmentList(){
+    private void fillFragmentList() {
         fragmentList = new ArrayList<>();
+
         fragmentList.add(homeFragment);
         fragmentList.add(new NewsFragment());
+
         fragmentList.add(new FashionFragment());
         fragmentList.add(new TechFragment());
         fragmentList.add(new SportsFragment());
         fragmentList.add(new FoodFragment());
         fragmentList.add(new TravelFragment());
+
 
     }
 
@@ -391,7 +487,9 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
-    private void launchFragments(){
+
+    private void launchFragments() {
+
         fillFragmentList();
 
         viewPager.setAdapter(new InfinitePagerAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -424,6 +522,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
+            if (popularFragment != null && (popularFragment.popularImage.getDrawable() == null || popularFragment.popularImage.getVisibility() == View.INVISIBLE)) {
+                Picasso.with(MainActivity.this).load(popularImageUrl).fit().into(popularFragment.popularImage);
+            }
+
             //Color Animation
             Random rand = new Random();
             position = rand.nextInt(19);
@@ -431,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
 
             Integer colorFrom = toolbarColor.getColor();
             Integer colorTo = Color.parseColor(colorArray.get(position));
-           // Integer colorStatusFrom = getS
+            // Integer colorStatusFrom = getS
             //Integer colorStatusTo = Color.parseColor(statusColorArray.get(position));
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             //ValueAnimator colorStatusAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorStatusFrom, colorStatusTo);
@@ -463,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
 //            colorStatusAnimation.setStartDelay(0);
 //            colorStatusAnimation.start();
 
-           // MainActivity.this.setTheme(R.style.ToolbarTheme1);
+            // MainActivity.this.setTheme(R.style.ToolbarTheme1);
 
 
         }
@@ -474,10 +576,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void fillColorArrays(){
+    public void fillColorArrays() {
 
 
-        String[] colorStrings = { "#004D40",
+        String[] colorStrings = {"#004D40",
                 "#00695C",
                 "#00796B",
                 "#00897B",
@@ -496,7 +598,7 @@ public class MainActivity extends AppCompatActivity {
                 "#A5D6A7",
                 "#C8E6C9",
                 "#E8F5E9"};
-       colorArray.addAll(Arrays.asList(colorStrings));
+        colorArray.addAll(Arrays.asList(colorStrings));
 
         statusColorArray.add("#000000");
         statusColorArray.add("#aa0000");
@@ -510,6 +612,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     // For authenticating an account.
     public static Account createSyncAccount(Context context){
         Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
@@ -520,7 +623,9 @@ public class MainActivity extends AppCompatActivity {
         return newAccount;
     }
 
-    public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray){
+
+    public void setImagesHomeFragment(ArrayList<String> imageUrls, ArrayList<String> headlineArray, ArrayList<String> previewArray) {
+
         Picasso.with(MainActivity.this).load(imageUrls.get(0)).fit().into(homeFragment.popularImage1);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(1)).fit().into(homeFragment.popularImage2);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(2)).fit().into(homeFragment.popularImage3);
@@ -529,6 +634,34 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(5)).fit().into(homeFragment.popularImage6);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(6)).fit().into(homeFragment.popularImage7);
         Picasso.with(homeFragment.getContext()).load(imageUrls.get(7)).fit().into(homeFragment.popularImage8);
+    }
+    public void setStatusBarBgColor(View statusBar,int color){
+            //status bar height
+            int actionBarHeight = getActionBarHeight();
+            int statusBarHeight = getStatusBarHeight();
+            //action bar height
+            statusBar.getLayoutParams().height = actionBarHeight + statusBarHeight;
+            statusBar.setBackgroundColor(color);
+
+
+    }
+    public int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 

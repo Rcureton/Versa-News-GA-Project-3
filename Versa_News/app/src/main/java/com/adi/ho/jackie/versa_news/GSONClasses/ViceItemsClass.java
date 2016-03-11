@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 /**
  * Created by Rob on 3/7/16.
  */
-public class ViceItemsClass {
+public class ViceItemsClass implements Parcelable{
 
     private String title;
     private String preview;
@@ -21,6 +21,32 @@ public class ViceItemsClass {
     private String category; // Category of the article (music, etc)
     private String thumb; // Article image thumbnail
     private String image; // Article image
+
+    protected ViceItemsClass(Parcel in) {
+        title = in.readString();
+        preview = in.readString();
+        tags = in.createStringArray();
+        body = in.readString();
+        id = in.readString();
+        url = in.readString();
+        author = in.readString();
+        pubDate = in.readString();
+        category = in.readString();
+        thumb = in.readString();
+        image = in.readString();
+    }
+
+    public static final Creator<ViceItemsClass> CREATOR = new Creator<ViceItemsClass>() {
+        @Override
+        public ViceItemsClass createFromParcel(Parcel in) {
+            return new ViceItemsClass(in);
+        }
+
+        @Override
+        public ViceItemsClass[] newArray(int size) {
+            return new ViceItemsClass[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -119,4 +145,23 @@ public class ViceItemsClass {
         return articleID;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(preview);
+        dest.writeStringArray(tags);
+        dest.writeString(body);
+        dest.writeString(id);
+        dest.writeString(url);
+        dest.writeString(author);
+        dest.writeString(pubDate);
+        dest.writeString(category);
+        dest.writeString(thumb);
+        dest.writeString(image);
+    }
 }
