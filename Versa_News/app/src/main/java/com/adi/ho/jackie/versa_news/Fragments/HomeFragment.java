@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setRetainInstance(true);
 
         // create ContextThemeWrapper from the original Activity Context with the custom theme
 
